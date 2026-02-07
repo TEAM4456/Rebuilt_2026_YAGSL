@@ -1,4 +1,6 @@
 // Import relevant classes.
+package frc.robot.subsystems;
+
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -7,8 +9,10 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 
 // Example SwerveDrive class
 public class SwerveDrive extends SubsystemBase
@@ -17,7 +21,7 @@ public class SwerveDrive extends SubsystemBase
     // Attributes
     SwerveDriveKinematics kinematics;
     SwerveDriveOdometry   odometry;
-    Gyroscope             gyro; // Psuedo-class representing a gyroscope.
+    AHRS             gyro; // Psuedo-class representing a gyroscope.
     SwerveModule[]        swerveModules; // Psuedo-class representing swerve modules.
     
     // Constructor
@@ -37,17 +41,16 @@ public class SwerveDrive extends SubsystemBase
             new Translation2d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-10.5))  // Back Right
         );
         
-        gyro = new Gyroscope(); // Psuedo-constructor for generating gyroscope.
+        gyro = new AHRS(NavXComType.kMXP_SPI); // Psuedo-constructor for generating gyroscope.
 
         // Create the SwerveDriveOdometry given the current angle, the robot is at x=0, r=0, and heading=0
         odometry = new SwerveDriveOdometry(
             kinematics,
-            gyro.getAngle(), // returns current gyro reading as a Rotation2d
+            Rotation2d.fromDegrees(gyro.getAngle()), // returns current gyro reading as a Rotation2d
             new SwerveModulePosition[]{new SwerveModulePosition(), new SwerveModulePosition(), new SwerveModulePosition(), new SwerveModulePosition()},
             // Front-Left, Front-Right, Back-Left, Back-Right
             new Pose2d(0,0,new Rotation2d()) // x=0, y=0, heading=0
         );
-            
     }
     
     // Simple drive function
@@ -81,7 +84,7 @@ public class SwerveDrive extends SubsystemBase
     public void periodic()
     {
         // Update the odometry every run.
-        odometry.update(gyro.getAngle(),  getCurrentSwerveModulePositions());
+        odometry.update(Rotation2d.fromDegrees(gyro.getAngle()),  getCurrentSwerveModulePositions());
     }
     
 }
