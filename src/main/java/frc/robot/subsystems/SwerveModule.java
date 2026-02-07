@@ -46,7 +46,7 @@ public class SwerveModule {
         driveConfig
             .inverted(false)
             .idleMode(IdleMode.kBrake)
-            .smartCurrentLimit(0)
+            .smartCurrentLimit(40)
             .voltageCompensation(0);
         driveConfig.encoder
             .positionConversionFactor(0)
@@ -64,7 +64,7 @@ public class SwerveModule {
         turnConfig
             .inverted(false)
             .idleMode(IdleMode.kBrake)
-            .smartCurrentLimit(0)
+            .smartCurrentLimit(20)
             .voltageCompensation(0);
         turnConfig.encoder
             .positionConversionFactor(0)
