@@ -13,6 +13,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
@@ -21,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 
 public class SwerveModule {
@@ -36,6 +38,8 @@ public class SwerveModule {
     private SparkMaxConfig turnConfig;
 
     private CANcoder canCoder;
+
+    private Rotation2d lastAngle; // Old code, probably conflicts with other stuff
     
     public SwerveModule(int driveMotorCANID, int steerMotorCANID, int cancoderCANID)
     {
@@ -87,6 +91,8 @@ public class SwerveModule {
             .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
             .withAbsoluteSensorDiscontinuityPoint(1);
         canCoder.getConfigurator().apply(canCoderConfig);
+
+        lastAngle = getState().angle;
     }
     
     /**
@@ -103,6 +109,50 @@ public class SwerveModule {
     public Rotation2d getAngle()
     {
           return Rotation2d.fromDegrees(turnEncoder.getPosition());
+    }
+
+    public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
+        // Custom optimize command, since default WPILib optimize assumes continuous controller which
+        // REV and CTRE are not
+        desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
+
+        setAngle(desiredState);
+        setSpeed(desiredState, isOpenLoop);
+    }
+
+    // CONSTANTS ARE HERE PLS HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELP
+    private void setAngle(SwerveModuleState desiredState) {
+        // Prevent rotating module if speed is less then 1%. Prevents jittering.
+        Rotation2d angle =
+            (Math.abs(desiredState.speedMetersPerSecond) <= (3.5 * 0.01)) // 3.5 was a constant called Constants.Swerve.maxSpeed!!!!!!!
+                ? lastAngle
+                : desiredState.angle;
+
+        turnController.setReference(angle.getDegrees(), ControlType.kPosition);
+        lastAngle = angle;
+    }
+
+    private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
+
+        SimpleMotorFeedforward feedforward =
+            new SimpleMotorFeedforward(
+                0.467, 1.44, 0.27);
+
+        if (isOpenLoop) {
+        double percentOutput = desiredState.speedMetersPerSecond / 3.5; // 3.5 was a constant called Constants.Swerve.maxSpeed!!!!!!!
+        driveMotor.set(percentOutput);
+        }
+        else {
+        driveController.setSetpoint(
+            desiredState.speedMetersPerSecond,
+            ControlType.kVelocity,
+            ClosedLoopSlot.kSlot0,
+            feedforward.calculate(desiredState.speedMetersPerSecond));
+        }
+    }
+
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
     }
     
     /**

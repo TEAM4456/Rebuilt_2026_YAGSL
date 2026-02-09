@@ -56,29 +56,30 @@ public class SwerveDrive extends SubsystemBase
     // Old drive method being overloaded
     public void drive(Translation2d translation, double rotation, /* boolean fieldRelative, */ boolean isOpenLoop) {
 
-    final SwerveDriveKinematics swerveKinematics =
-    //XY plane is robot relative with +x is forward (front of robot) and +y is left
+        // Assignment statment taken from constants and plopped in here
+        final SwerveDriveKinematics swerveKinematics =
+
+        //XY plane is robot relative with +x is forward (front of robot) and +y is left
         new SwerveDriveKinematics(
             new Translation2d(-Units.inchesToMeters(27) / 2.0, -Units.inchesToMeters(20.5) / 2.0), // Mod 0
             new Translation2d(-Units.inchesToMeters(27) / 2.0, Units.inchesToMeters(20.5) / 2.0), // Mod 1
             new Translation2d(Units.inchesToMeters(27) / 2.0, -Units.inchesToMeters(20.5) / 2.0), // Mod 2
             new Translation2d(Units.inchesToMeters(27) / 2.0, Units.inchesToMeters(20.5) / 2.0)); // Mod 3
-
-
-    // This method was pulled from the old SwerveDrive code and is needed for
-    // teleop control in RobotContainer through TeleopSwerve command
-    SwerveModuleState[] swerveModuleStates = swerveKinematics.toSwerveModuleStates(
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-            translation.getX(), translation.getY(), rotation, getRotation2d()));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, 3.5); // Used to be a constant
-    
-    // A for each loop that sets the desired state of each swerve module on the robot
-    for (SwerveModule tempMod : swerveModules) {
-      tempMod.setDesiredState(swerveModuleStates[tempMod.moduleNumber], isOpenLoop);
+        
+        // This method was pulled from the old SwerveDrive code and is needed for
+        // teleop control in RobotContainer through TeleopSwerve command
+        SwerveModuleState[] swerveModuleStates = swerveKinematics.toSwerveModuleStates(
+            ChassisSpeeds.fromFieldRelativeSpeeds(
+                translation.getX(), translation.getY(), rotation, getRotation2d()));
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, 3.5); // Used to be a constant
+        
+        // A for each loop that sets the desired state of each swerve module on the robot
+        for (SwerveModule tempMod : swerveModules) {
+            tempMod.setDesiredState(swerveModuleStates[tempMod.moduleNumber], isOpenLoop);
+        }
     }
-  }
 
-    // Simple drive function also being overloaded
+    // Simple drive function also being overloaded. provided by YAGSL?
     public void drive()
     {
         // Create test ChassisSpeeds going X = 14in, Y=4in, and spins at 30deg per second.
@@ -103,6 +104,10 @@ public class SwerveDrive extends SubsystemBase
             new SwerveModulePosition(swerveModules[2].getDistance(), swerveModules[2].getAngle()), // Back-Left
             new SwerveModulePosition(swerveModules[3].getDistance(), swerveModules[3].getAngle())  // Back-Right
         };
+    }
+
+    public Rotation2d getRotation2d() {
+        return gyro.getRotation2d();
     }
     
     @Override
