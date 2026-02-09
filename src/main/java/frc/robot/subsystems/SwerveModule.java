@@ -27,6 +27,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class SwerveModule {
 
+    public int moduleNumber;
     private SparkMax driveMotor;
     private RelativeEncoder driveEncoder;
     private SparkClosedLoopController driveController;
@@ -43,6 +44,7 @@ public class SwerveModule {
     
     public SwerveModule(int driveMotorCANID, int steerMotorCANID, int cancoderCANID)
     {
+        moduleNumber = 0; // Placeholder value, set appropriately in real code
         driveMotor = new SparkMax(driveMotorCANID, SparkLowLevel.MotorType.kBrushless);
         driveEncoder = driveMotor.getEncoder();
         driveController = driveMotor.getClosedLoopController();   
@@ -94,7 +96,10 @@ public class SwerveModule {
 
         lastAngle = getState().angle;
     }
-    
+    public SwerveModule(int driveMotorCANID, int steerMotorCANID, int cancoderCANID, int moduleNum) {
+        this(driveMotorCANID, steerMotorCANID, cancoderCANID);
+        moduleNumber = moduleNum;
+    }
     /**
     Get the distance in meters.
     */
