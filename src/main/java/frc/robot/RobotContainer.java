@@ -33,7 +33,7 @@ public class RobotContainer {
     private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   // The robot's subsystems and commands are defined here...
-  private final Elevator elevatorSubsystem = new Elevator();
+  //private final Elevator elevatorSubsystem = new Elevator();
   private final SwerveDrive s_Swerve = new SwerveDrive();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */

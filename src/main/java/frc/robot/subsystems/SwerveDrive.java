@@ -29,6 +29,11 @@ public class SwerveDrive extends SubsystemBase
     {
     
         swerveModules = new SwerveModule[4]; // Psuedo-code; Create swerve modules here.
+
+        swerveModules[0] = new SwerveModule(7, 8, 9);
+        swerveModules[1] = new SwerveModule(10, 11, 12);
+        swerveModules[2] = new SwerveModule(4, 5, 6);
+        swerveModules[3] = new SwerveModule(1, 2, 3);
         
         // Create SwerveDriveKinematics object
         // 12.5in from center of robot to center of wheel.

@@ -55,11 +55,11 @@ public class SwerveModule {
             .smartCurrentLimit(40)
             .voltageCompensation(12.0);
         driveConfig.encoder
-            .positionConversionFactor(0)
-            .velocityConversionFactor(0);
+            .positionConversionFactor(Units.inchesToMeters(4 / Math.PI)/5.36) // Numbers from old constants file for positionConversionFactor
+            .velocityConversionFactor(Units.inchesToMeters(4 / Math.PI)/5.36/60); // Also from old comnstants
         driveConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pid(0, 0, 0);
+            .pid(0.0020645, 0, 0); // From the json files
         driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
 
@@ -68,16 +68,16 @@ public class SwerveModule {
         turnEncoder = turnMotor.getEncoder();
         turnController = turnMotor.getClosedLoopController();
         turnConfig
-            .inverted(false)
+            .inverted(true)
             .idleMode(IdleMode.kBrake)
             .smartCurrentLimit(20)
             .voltageCompensation(12.0);
         turnConfig.encoder
-            .positionConversionFactor(0)
-            .velocityConversionFactor(0);
+            .positionConversionFactor(360/(12.8));
+            //.velocityConversionFactor(360/(12.8) / 60); //Not used in old code
         turnConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pid(0, 0, 0);
+            .pid(0.0020645, 0, 0);
         turnMotor.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // Reset everything to factory default
