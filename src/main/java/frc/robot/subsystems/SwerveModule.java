@@ -55,8 +55,8 @@ public class SwerveModule {
             .smartCurrentLimit(40)
             .voltageCompensation(12.0);
         driveConfig.encoder
-            .positionConversionFactor(Units.inchesToMeters(4 / Math.PI)/5.36) // Numbers from old constants file for positionConversionFactor
-            .velocityConversionFactor(Units.inchesToMeters(4 / Math.PI)/5.36/60); // Also from old comnstants
+            .positionConversionFactor(Units.inchesToMeters(4 * Math.PI)/5.36) // Numbers from old constants file for positionConversionFactor
+            .velocityConversionFactor(Units.inchesToMeters(4 * Math.PI)/5.36/60); // Also from old comnstants
         driveConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pid(0.0020645, 0, 0); // From the json files
@@ -67,6 +67,7 @@ public class SwerveModule {
         turnMotor = new SparkMax(steerMotorCANID, SparkLowLevel.MotorType.kBrushless);
         turnEncoder = turnMotor.getEncoder();
         turnController = turnMotor.getClosedLoopController();
+        turnConfig = new SparkMaxConfig();
         turnConfig
             .inverted(true)
             .idleMode(IdleMode.kBrake)

@@ -38,7 +38,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
     s_Swerve.setDefaultCommand(
         new TeleopSwerve(
             s_Swerve,
@@ -49,7 +48,7 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
-  
+    
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -66,14 +65,14 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Look into this later
-    /*
-    new Trigger(elevatorSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(elevatorSubsystem));
+
+    //new Trigger(elevatorSubsystem::exampleCondition)
+        //.onTrue(new ExampleCommand(elevatorSubsystem));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(elevatorSubsystem.exampleMethodCommand());
-    */
+    //m_driverController.b().whileTrue(elevatorSubsystem.exampleMethodCommand());
+
   }
 
   /**
