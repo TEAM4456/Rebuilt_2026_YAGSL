@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.CANcoder;
-
 import java.io.ObjectInputFilter.Config;
-
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
