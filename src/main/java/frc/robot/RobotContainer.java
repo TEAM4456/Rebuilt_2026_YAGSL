@@ -4,17 +4,23 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-//import frc.robot.commands.Autos;
-//import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.Elevator;
+import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.subsystems.Elevator;
+
+/* Most commands will be imported later when we deem them necessary...
+  import frc.robot.commands.Autos;
+  import frc.robot.commands.ExampleCommand;
+*/
+// ...This command however has proven itself and has been deemed worthy
+import frc.robot.commands.TeleopSwerve;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.TeleopSwerve;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a

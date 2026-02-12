@@ -7,6 +7,8 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import edu.wpi.first.math.util.Units;
+import frc.robot.Constants;
+
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -20,8 +22,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import com.thethriftybot.server.CAN;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class SwerveModule {
 
@@ -40,43 +43,42 @@ public class SwerveModule {
 
     private Rotation2d lastAngle; // Old code, probably conflicts with other stuff
     
-    public SwerveModule(int driveMotorCANID, int steerMotorCANID, int cancoderCANID)
-    {
-        moduleNumber = 0; // Placeholder value, set appropriately in real code
+    public SwerveModule(int driveMotorCANID, int steerMotorCANID, int canCoderCANID) {
         driveMotor = new SparkMax(driveMotorCANID, SparkLowLevel.MotorType.kBrushless);
         driveEncoder = driveMotor.getEncoder();
         driveController = driveMotor.getClosedLoopController();   
         driveConfig = new SparkMaxConfig();
+        // Everything here with type Constants is taken from our Constants.java file
         driveConfig
-            .inverted(false)
+            .inverted(Constants.driveInverted)
             .idleMode(IdleMode.kBrake)
-            .smartCurrentLimit(40)
-            .voltageCompensation(12.0);
+            .smartCurrentLimit(Constants.driveSmartCurrentLimit)
+            .voltageCompensation(Constants.driveVoltageCompensation);
         driveConfig.encoder
-            .positionConversionFactor(Units.inchesToMeters(4 * Math.PI)/5.36) // Numbers from old constants file for positionConversionFactor
-            .velocityConversionFactor(Units.inchesToMeters(4 * Math.PI)/5.36/60); // Also from old comnstants
+            .positionConversionFactor(Constants.drivePotentialConversionFactor)
+            .velocityConversionFactor(Constants.driveVelocityConversionFactor);
         driveConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pid(0.0020645, 0, 0); // From the json files
+            .pid(Constants.pDriveMotor, Constants.iDriveMotor, Constants.dDriveMotor);
         driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
 
 
         turnMotor = new SparkMax(steerMotorCANID, SparkLowLevel.MotorType.kBrushless);
         turnEncoder = turnMotor.getEncoder();
         turnController = turnMotor.getClosedLoopController();
         turnConfig = new SparkMaxConfig();
+        // Everything here is also taken from our cConstants.java file
         turnConfig
-            .inverted(true)
+            .inverted(Constants.turnInverted)
             .idleMode(IdleMode.kBrake)
-            .smartCurrentLimit(20)
-            .voltageCompensation(12.0);
+            .smartCurrentLimit(Constants.turnSmartCurrentLimit)
+            .voltageCompensation(Constants.turnVoltageCompensation);
         turnConfig.encoder
-            .positionConversionFactor(360/(12.8));
-            //.velocityConversionFactor(360/(12.8) / 60); //Not used in old code
+            .positionConversionFactor(Constants.turnPotentialConversionFactor);
+            //.velocityConversionFactor(Constants.turnVelocityConversionFactor); // Not used in old code so commented out for now
         turnConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pid(0.0020645, 0, 0);
+            .pid(Constants.pTurnMotor, Constants.iTurnMotor, Constants.dTurnMotor);
         turnMotor.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // Reset everything to factory default
@@ -86,17 +88,17 @@ public class SwerveModule {
         */
 
         // CANcoder Configuration
-        canCoder = new CANcoder(cancoderCANID);
+        canCoder = new CANcoder(canCoderCANID);
         CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
         canCoderConfig.MagnetSensor = new MagnetSensorConfigs()
             .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
-            .withAbsoluteSensorDiscontinuityPoint(1);
+            .withAbsoluteSensorDiscontinuityPoint(Constants.canCoderAbsoluteSensorDiscontinuityPoint);
         canCoder.getConfigurator().apply(canCoderConfig);
 
         lastAngle = getState().angle;
     }
-    public SwerveModule(int driveMotorCANID, int steerMotorCANID, int cancoderCANID, int moduleNum) {
-        this(driveMotorCANID, steerMotorCANID, cancoderCANID);
+    public SwerveModule(int driveMotorCANID, int steerMotorCANID, int canCoderCANID, int moduleNum) {
+        this(driveMotorCANID, steerMotorCANID, canCoderCANID);
         moduleNumber = moduleNum;
     }
     /**
