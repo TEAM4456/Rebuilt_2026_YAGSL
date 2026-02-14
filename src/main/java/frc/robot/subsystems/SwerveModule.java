@@ -42,7 +42,7 @@ public class SwerveModule {
     private CANcoderConfiguration canCoderConfig;
     private Rotation2d lastAngle; // Not sure what this represents, old code that probably conflicts with other stuff
     
-    public SwerveModule(int driveMotorCANID, int turnMotorCANID, int canCoderCANID) {
+    public SwerveModule(int driveMotorCANID, int turnMotorCANID, int canCoderCANID, boolean driveInverted) {
 
         // Instantiations for drive motor stuff
         driveMotor = new SparkMax(driveMotorCANID, SparkLowLevel.MotorType.kBrushless);
@@ -52,7 +52,7 @@ public class SwerveModule {
         // Uses method chaining to set config info for drive motor and applies it at the end
         // Everything here with type Constants is taken from our "Constants.java" file
         driveConfig
-            .inverted(Constants.driveInverted)
+            .inverted(driveInverted)
             .idleMode(IdleMode.kBrake)
             .smartCurrentLimit(Constants.driveSmartCurrentLimit)
             .voltageCompensation(Constants.driveVoltageCompensation);
@@ -97,7 +97,7 @@ public class SwerveModule {
         driveMotor.restoreFactoryDefaults();
         turnMotor.restoreFactoryDefaults();
         */
-
+            
         lastAngle = getState().angle; // Look into this more at a later date
     }
 

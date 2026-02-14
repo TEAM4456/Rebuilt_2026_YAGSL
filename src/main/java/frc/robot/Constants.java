@@ -29,7 +29,7 @@ public final class Constants {
     */
 
     // SWERVE MODULE MOTOR CREATION VALUES BELOW
-    public static final boolean driveInverted = false;
+    public static final boolean driveInverted = false; // NOT BEING USED
     public static final int driveSmartCurrentLimit = 40;
     public static final double driveVoltageCompensation = 12.0;
     public static final double drivePotentialConversionFactor = Units.inchesToMeters(4 * Math.PI)/5.36; // Taken from the old constants file, most likely should change
@@ -40,6 +40,10 @@ public final class Constants {
     public static final double turnVoltageCompensation = 12.0;
     public static final double turnPotentialConversionFactor = 360/(12.8); // Taken from the old constants file as well
     public static final double turnVelocityConversionFactor = 0; // Not currently used
+
+    // Used to set turnMotors to their offsets in order of canCoder ID's in order of 3, 6, 9, 12
+    // FIXME Its just not working and idk where to use these values
+    public static final double turnOffsets[] = {0.218262, 0.861816, 0.290039, 0.332031}; 
 
     // We just copied hard coded values from the JSON file "pidfproperties.json"
     public static final double pDriveMotor = 0.0020645;
