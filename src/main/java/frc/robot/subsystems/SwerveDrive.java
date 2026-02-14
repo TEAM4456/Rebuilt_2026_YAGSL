@@ -20,20 +20,19 @@ public class SwerveDrive extends SubsystemBase
 
     // Attributes
     SwerveDriveKinematics kinematics;
-    SwerveDriveOdometry   odometry;
-    AHRS             gyro; // Psuedo-class representing a gyroscope.
-    SwerveModule[]        swerveModules; // Psuedo-class representing swerve modules.
+    SwerveDriveOdometry odometry;
+    AHRS gyro; // Psuedo-class representing a gyroscope.
+    SwerveModule[] swerveModules; // Psuedo-class representing swerve modules.
     
     // Constructor
-    public SwerveDrive() 
-    {
+    public SwerveDrive() {
     
         swerveModules = new SwerveModule[4]; // Psuedo-code; Create swerve modules here.
 
-        swerveModules[0] = new SwerveModule(7, 8, 9);
-        swerveModules[1] = new SwerveModule(10, 11, 12);
-        swerveModules[2] = new SwerveModule(4, 5, 6);
-        swerveModules[3] = new SwerveModule(1, 2, 3);
+        swerveModules[0] = new SwerveModule(7, 8, 9); // Back right
+        swerveModules[1] = new SwerveModule(10, 11, 12); // Back left
+        swerveModules[2] = new SwerveModule(4, 5, 6); // Front right
+        swerveModules[3] = new SwerveModule(1, 2, 3); // Front left
         
         // Create SwerveDriveKinematics object
         // 12.5in from center of robot to center of wheel.
@@ -59,12 +58,13 @@ public class SwerveDrive extends SubsystemBase
     }
     
     // Old drive method being overloaded
-    public void drive(Translation2d translation, double rotation, /* boolean fieldRelative, */ boolean isOpenLoop) {
+    public void drive(Translation2d translation, double rotation) {
 
         // Assignment statment taken from constants and plopped in here
         final SwerveDriveKinematics swerveKinematics =
 
         //XY plane is robot relative with +x is forward (front of robot) and +y is left
+        // FIXME, Check that the positive and negative declarationd below match with current robot module arangement
         new SwerveDriveKinematics(
             new Translation2d(-Units.inchesToMeters(27) / 2.0, -Units.inchesToMeters(20.5) / 2.0), // Mod 0
             new Translation2d(-Units.inchesToMeters(27) / 2.0, Units.inchesToMeters(20.5) / 2.0), // Mod 1
@@ -79,12 +79,18 @@ public class SwerveDrive extends SubsystemBase
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, 3.5); // Used to be a constant
         
         // A for each loop that sets the desired state of each swerve module on the robot
-        for (SwerveModule tempMod : swerveModules) {
-            tempMod.setDesiredState(swerveModuleStates[tempMod.moduleNumber], isOpenLoop);
+        /*for (SwerveModule tempMod : swerveModules) {
+            tempMod.setDesiredState(swerveModuleStates[tempMod.moduleNumber]);
+        }
+        */
+
+        // A normal for loop that apples teh swerveModuleStates to each module
+        for (int i = 0; i < 4; i++) {
+            swerveModules[i].setDesiredState(swerveModuleStates[i]);
         }
     }
 
-    // Simple drive function also being overloaded. provided by YAGSL?
+    // Simple drive function also being overloaded. provided by YAGSL? Not used currently in our code but nice to have around
     public void drive()
     {
         // Create test ChassisSpeeds going X = 14in, Y=4in, and spins at 30deg per second.

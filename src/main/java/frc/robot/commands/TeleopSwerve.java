@@ -52,11 +52,11 @@ public class TeleopSwerve extends Command {
         rotationLimiter.calculate(
             MathUtil.applyDeadband(rotationSup.getAsDouble(), 0.15));
 
-    /* Drive */
+    // Drive
     s_Swerve.drive(
         new Translation2d(translationVal, strafeVal).times(3.5),
-        rotationVal * 11.5,
+        rotationVal * 11.5
         //!robotCentricSup.getAsBoolean(),
-        true);
+        );
   }
 }

@@ -28,27 +28,29 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class SwerveModule {
 
-    public int moduleNumber;
-    private SparkMax driveMotor;
-    private RelativeEncoder driveEncoder;
-    private SparkClosedLoopController driveController;
-    private SparkMaxConfig driveConfig;
+    private SparkMax driveMotor; // Represents drive motor object
+    private RelativeEncoder driveEncoder; // Represents internal encoder of the drive motor
+    private SparkClosedLoopController driveController; // Not sure what this represents and its never called in the code
+    private SparkMaxConfig driveConfig; // Object that contains configuration info for the drive motor
 
-    private SparkMax turnMotor;
-    private RelativeEncoder turnEncoder;
-    private SparkClosedLoopController turnController;
-    private SparkMaxConfig turnConfig;
+    private SparkMax turnMotor; // Represents turn motor object
+    private RelativeEncoder turnEncoder; // Represents internal encoder of the turn motor
+    private SparkClosedLoopController turnController; // Also not sure what this represents and its never called in the code
+    private SparkMaxConfig turnConfig; // Object that contains configuration info for the turn motor
 
-    private CANcoder canCoder;
-
-    private Rotation2d lastAngle; // Old code, probably conflicts with other stuff
+    private CANcoder canCoder; // Represents the CAN coder object
+    private CANcoderConfiguration canCoderConfig;
+    private Rotation2d lastAngle; // Not sure what this represents, old code that probably conflicts with other stuff
     
-    public SwerveModule(int driveMotorCANID, int steerMotorCANID, int canCoderCANID) {
+    public SwerveModule(int driveMotorCANID, int turnMotorCANID, int canCoderCANID) {
+
+        // Instantiations for drive motor stuff
         driveMotor = new SparkMax(driveMotorCANID, SparkLowLevel.MotorType.kBrushless);
         driveEncoder = driveMotor.getEncoder();
         driveController = driveMotor.getClosedLoopController();   
         driveConfig = new SparkMaxConfig();
-        // Everything here with type Constants is taken from our Constants.java file
+        // Uses method chaining to set config info for drive motor and applies it at the end
+        // Everything here with type Constants is taken from our "Constants.java" file
         driveConfig
             .inverted(Constants.driveInverted)
             .idleMode(IdleMode.kBrake)
@@ -60,14 +62,14 @@ public class SwerveModule {
         driveConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pid(Constants.pDriveMotor, Constants.iDriveMotor, Constants.dDriveMotor);
-        driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters); // Aplies config to drive motor
 
 
-        turnMotor = new SparkMax(steerMotorCANID, SparkLowLevel.MotorType.kBrushless);
+        // Same proccess above is used for turn motor instantiations and config
+        turnMotor = new SparkMax(turnMotorCANID, SparkLowLevel.MotorType.kBrushless);
         turnEncoder = turnMotor.getEncoder();
         turnController = turnMotor.getClosedLoopController();
         turnConfig = new SparkMaxConfig();
-        // Everything here is also taken from our cConstants.java file
         turnConfig
             .inverted(Constants.turnInverted)
             .idleMode(IdleMode.kBrake)
@@ -81,26 +83,30 @@ public class SwerveModule {
             .pid(Constants.pTurnMotor, Constants.iTurnMotor, Constants.dTurnMotor);
         turnMotor.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        // Reset everything to factory default
+        // Instatiations for canCoder stuff
+        canCoder = new CANcoder(canCoderCANID);
+        canCoderConfig = new CANcoderConfiguration();
+        // Gets the magnetSensor property from the canCoderConfig to apply magnet sensor config using method chaining
+        canCoderConfig.MagnetSensor = new MagnetSensorConfigs()
+            .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+            .withAbsoluteSensorDiscontinuityPoint(Constants.canCoderAbsoluteSensorDiscontinuityPoint);
+        canCoder.getConfigurator().apply(canCoderConfig); // Aplies config to CAN coder
+
+        // Methods to reset everything to factory default, probably want to use these in competition
         /*
         driveMotor.restoreFactoryDefaults();
         turnMotor.restoreFactoryDefaults();
         */
 
-        // CANcoder Configuration
-        canCoder = new CANcoder(canCoderCANID);
-        CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
-        canCoderConfig.MagnetSensor = new MagnetSensorConfigs()
-            .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
-            .withAbsoluteSensorDiscontinuityPoint(Constants.canCoderAbsoluteSensorDiscontinuityPoint);
-        canCoder.getConfigurator().apply(canCoderConfig);
+        lastAngle = getState().angle; // Look into this more at a later date
+    }
 
-        lastAngle = getState().angle;
-    }
-    public SwerveModule(int driveMotorCANID, int steerMotorCANID, int canCoderCANID, int moduleNum) {
-        this(driveMotorCANID, steerMotorCANID, canCoderCANID);
-        moduleNumber = moduleNum;
-    }
+    /*  
+    ================================================================================================
+    A lot of helper methods declared here, some of which can definetly be condensed into one another
+    ================================================================================================
+    */
+
     /**
     Get the distance in meters.
     */
@@ -117,16 +123,16 @@ public class SwerveModule {
           return Rotation2d.fromDegrees(turnEncoder.getPosition());
     }
 
-    public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
+    public void setDesiredState(SwerveModuleState desiredState) {
         // Custom optimize command, since default WPILib optimize assumes continuous controller which
         // REV and CTRE are not
         desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
 
         setAngle(desiredState);
-        setSpeed(desiredState, isOpenLoop);
+        setSpeed(desiredState, Constants.isOpenLoop); // Old code said this was "boolean field relative", PLEASE LOOK INTO THIS
     }
 
-    // CONSTANTS ARE HERE PLS HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELP
+    // FIXME, Constants here need to be moved to the Constants file
     private void setAngle(SwerveModuleState desiredState) {
         // Prevent rotating module if speed is less then 1%. Prevents jittering.
         Rotation2d angle =

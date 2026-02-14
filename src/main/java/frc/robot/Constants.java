@@ -52,5 +52,8 @@ public final class Constants {
 
     public static final int canCoderAbsoluteSensorDiscontinuityPoint = 1;
     // END SWERVE MODULE MOTOR CREATION VALUES
+
+    public static final boolean isOpenLoop = true;
+    
   //}
 }
