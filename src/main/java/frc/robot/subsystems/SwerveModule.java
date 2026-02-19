@@ -82,6 +82,26 @@ public class SwerveModule {
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pid(Constants.pTurnMotor, Constants.iTurnMotor, Constants.dTurnMotor);
         turnMotor.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        
+        
+        int arrayGettingNumber = 0;
+
+        if (turnMotorCANID == 2) {
+            arrayGettingNumber = 0;
+        }
+        else if (turnMotorCANID == 5) {
+            arrayGettingNumber = 1;
+        }
+        else if (turnMotorCANID == 8) {
+            arrayGettingNumber = 2;
+        }
+        else if (turnMotorCANID == 11) {
+            arrayGettingNumber = 3;
+        }
+
+        double tempNum = (canCoder.getAbsolutePosition().getValueAsDouble() * 360) - Constants.turnOffsets[arrayGettingNumber];
+        turnEncoder.setPosition(tempNum);
+
 
         // Instatiations for canCoder stuff
         canCoder = new CANcoder(canCoderCANID);

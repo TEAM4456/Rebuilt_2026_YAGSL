@@ -34,7 +34,7 @@ public final class Constants {
     public static final double driveVoltageCompensation = 12.0;
     public static final double drivePotentialConversionFactor = Units.inchesToMeters(4 * Math.PI)/5.36; // Taken from the old constants file, most likely should change
     public static final double driveVelocityConversionFactor = Units.inchesToMeters(4 * Math.PI)/5.36/60; // This one too
-
+    public static final double maxSpeed = 3.5; // Meters per second, taken from the old constants file as well
     public static final boolean turnInverted = false;
     public static final int turnSmartCurrentLimit = 20;
     public static final double turnVoltageCompensation = 12.0;
@@ -43,7 +43,10 @@ public final class Constants {
 
     // Used to set turnMotors to their offsets in order of canCoder ID's in order of 3, 6, 9, 12
     // FIXME Its just not working and idk where to use these values
-    public static final double turnOffsets[] = {0.218262, 0.861816, 0.290039, 0.332031}; 
+    // Non converted offsets straight from pheonix tuner
+    /* public static final double turnOffsets[] = {0.218262, 0.861816, 0.290039, 0.332031}; */
+    // Converted to pheonix tuner offest values to degrees for testing purposes
+    public static final double turnOffsets[] = {78.57432, 310.25376, 104.41404, 119.53116};
 
     // We just copied hard coded values from the JSON file "pidfproperties.json"
     public static final double pDriveMotor = 0.0020645;
