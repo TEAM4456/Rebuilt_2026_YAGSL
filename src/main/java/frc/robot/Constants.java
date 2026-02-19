@@ -44,7 +44,8 @@ public final class Constants {
     // Used to set turnMotors to their offsets in order of canCoder ID's in order of 3, 6, 9, 12
     // FIXME Its just not working and idk where to use these values
     // Non converted offsets straight from pheonix tuner
-    /* public static final double turnOffsets[] = {0.218262, 0.861816, 0.290039, 0.332031}; */
+    // public static final double turnOffsets[] = {0.218262, 0.861816, 0.290039, 0.332031};
+    
     // Converted to pheonix tuner offest values to degrees for testing purposes
     public static final double turnOffsets[] = {78.57432, 310.25376, 104.41404, 119.53116};
 

@@ -83,7 +83,7 @@ public class SwerveModule {
             .pid(Constants.pTurnMotor, Constants.iTurnMotor, Constants.dTurnMotor);
         turnMotor.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         
-        
+
         int arrayGettingNumber = 0;
 
         if (turnMotorCANID == 2) {
@@ -99,9 +99,6 @@ public class SwerveModule {
             arrayGettingNumber = 3;
         }
 
-        double tempNum = (canCoder.getAbsolutePosition().getValueAsDouble() * 360) - Constants.turnOffsets[arrayGettingNumber];
-        turnEncoder.setPosition(tempNum);
-
 
         // Instatiations for canCoder stuff
         canCoder = new CANcoder(canCoderCANID);
@@ -111,6 +108,12 @@ public class SwerveModule {
             .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
             .withAbsoluteSensorDiscontinuityPoint(Constants.canCoderAbsoluteSensorDiscontinuityPoint);
         canCoder.getConfigurator().apply(canCoderConfig); // Aplies config to CAN coder
+
+        // Perform the alignment using degrees instead of absolute rotations.
+        double tempNum = (canCoder.getAbsolutePosition().getValueAsDouble() * 360) - Constants.turnOffsets[arrayGettingNumber];
+
+        // double tempNum = (canCoder.getAbsolutePosition().getValueAsDouble()) - Constants.turnOffsets[arrayGettingNumber];        
+        turnEncoder.setPosition(tempNum);
 
         // Methods to reset everything to factory default, probably want to use these in competition
         /*
