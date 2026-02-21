@@ -42,13 +42,20 @@ public final class Constants {
     public static final double turnVelocityConversionFactor = 0; // Not currently used
 
     // Used to set turnMotors to their offsets in order of canCoder ID's in order of 3, 6, 9, 12
-    // FIXME Its just not working and idk where to use these values
-    // Non converted offsets straight from pheonix tuner
-    // public static final double turnOffsets[] = {0.218262, 0.861816, 0.290039, 0.332031};
-    
-    // Converted to pheonix tuner offest values to degrees for testing purposes
-    public static final double turnOffsets[] = {78.57432, 310.25376, 104.41404, 119.53116};
+    /*
+    DEBUG
+    Previously measured offsets: 3, 6, 9, 12
+    Rotations: 0.218262, 0.861816, 0.290039, 0.332031
+    Degrees: 78.57432, 310.25376, 104.41404, 119.53116
+    Adjusted Degrees: 0, 231.67944, 25.83972, 40.95684
 
+    Re-measured 2/21/2026:
+    Rotations: 0.714844, 0.868164, 0.792480, 0.334473
+    Degrees: 77.34384, 312.53904, 105.2928, 120.41028
+    Adjusted Degrees: 0, 235.1952, 27.94896, 43.06644
+
+     */
+    public static final double turnOffsets[] = {0, 235.1952, 27.94896, 43.06644};
     // We just copied hard coded values from the JSON file "pidfproperties.json"
     public static final double pDriveMotor = 0.0020645;
     public static final double iDriveMotor = 0;

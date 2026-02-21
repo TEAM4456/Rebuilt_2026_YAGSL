@@ -159,7 +159,7 @@ public class SwerveModule {
     private void setAngle(SwerveModuleState desiredState) {
         // Prevent rotating module if speed is less then 1%. Prevents jittering.
         Rotation2d angle =
-            (Math.abs(desiredState.speedMetersPerSecond) <= (3.5 * 0.01)) // 3.5 was a constant called Constants.Swerve.maxSpeed!!!!!!!
+            (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.maxSpeed * 0.01)) 
                 ? lastAngle
                 : desiredState.angle;
 
@@ -174,8 +174,8 @@ public class SwerveModule {
                 0.467, 1.44, 0.27);
 
         if (isOpenLoop) {
-        double percentOutput = desiredState.speedMetersPerSecond / 3.5; // 3.5 was a constant called Constants.Swerve.maxSpeed!!!!!!!
-        driveMotor.set(percentOutput);
+            double percentOutput = desiredState.speedMetersPerSecond / Constants.maxSpeed;
+            driveMotor.set(percentOutput);
         }
         else {
         driveController.setSetpoint(

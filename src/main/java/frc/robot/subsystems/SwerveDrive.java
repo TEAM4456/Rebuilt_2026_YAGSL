@@ -29,14 +29,14 @@ public class SwerveDrive extends SubsystemBase
     
         swerveModules = new SwerveModule[4]; // Psuedo-code; Create swerve modules here.
 
-        swerveModules[0] = new SwerveModule(7, 8, 9, false); // Back right
-        swerveModules[1] = new SwerveModule(10, 11, 12, true); // Back left
-        swerveModules[2] = new SwerveModule(4, 5, 6, true); // Front right
-        swerveModules[3] = new SwerveModule(1, 2, 3, false); // Front left
+        swerveModules[3] = new SwerveModule(7, 8, 9, false); // Back right
+        swerveModules[2] = new SwerveModule(10, 11, 12, false); // Back left
+        swerveModules[1] = new SwerveModule(4, 5, 6, false); // Front right
+        swerveModules[0] = new SwerveModule(1, 2, 3, false); // Front left
         
         // Create SwerveDriveKinematics object
-        // 12.5in from center of robot to center of wheel.
-        // 12.5in is converted to meters to work with object.
+        // 10.5in from center of robot to center of wheel.
+        // 10.5in is converted to meters to work with object.
         // Translation2d(x,y) == Translation2d(front, left)
         kinematics = new SwerveDriveKinematics(
             new Translation2d(Units.inchesToMeters(10.5), Units.inchesToMeters(10.5)), // Front Left
@@ -64,7 +64,7 @@ public class SwerveDrive extends SubsystemBase
         final SwerveDriveKinematics swerveKinematics =
 
         //XY plane is robot relative with +x is forward (front of robot) and +y is left
-        // FIXME, Check that the positive and negative declarationd below match with current robot module arangement
+        // FIXME, Check that the positive and negative declarations below match with current robot module arangement
         new SwerveDriveKinematics(
             new Translation2d(-Units.inchesToMeters(27) / 2.0, -Units.inchesToMeters(20.5) / 2.0), // Mod 0
             new Translation2d(-Units.inchesToMeters(27) / 2.0, Units.inchesToMeters(20.5) / 2.0), // Mod 1
