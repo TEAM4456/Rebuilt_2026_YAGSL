@@ -39,7 +39,7 @@ public class RobotContainer {
     private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   // The robot's subsystems and commands are defined here...
-  //private final Elevator elevatorSubsystem = new Elevator();
+  private final Elevator elevatorSubsystem = new Elevator();
   private final SwerveDrive s_Swerve = new SwerveDrive();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -65,9 +65,13 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-    }
+  }
 
-    private void configureBindings() {
+  public Command elevatorUpCommand() {
+    return elevatorSubsystem.elevatorUp();
+  }
+  
+  private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     // Look into this later
@@ -79,17 +83,17 @@ public class RobotContainer {
     // cancelling on release.
     //m_driverController.b().whileTrue(elevatorSubsystem.exampleMethodCommand());
 
-  }
 
+    driver.a().onTrue(elevatorUpCommand());
+  
+  }
+  
+  // Look into this later
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-
-
-  
-  // Look into this later
   /*
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous

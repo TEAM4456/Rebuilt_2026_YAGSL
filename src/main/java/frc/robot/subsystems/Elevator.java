@@ -48,7 +48,7 @@ public class Elevator extends SubsystemBase{
     elevatorEncoder = elevatorMotor.getEncoder();
     elevatorLoop = elevatorMotor.getClosedLoopController();
     elevatorConfig = new SparkMaxConfig();
-
+    
   }
 
   /**
@@ -59,13 +59,13 @@ public class Elevator extends SubsystemBase{
   public Command elevatorUp() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          elevatorLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
-        });
+    return run(
+      () -> {
+        elevatorMotor.set(0.2);
+      });
   }
 
-  public Command elevatorDown() {
+  public Command elevatorAutoDoSomthingLater() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
