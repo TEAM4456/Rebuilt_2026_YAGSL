@@ -49,7 +49,7 @@ public class RobotContainer {
             s_Swerve,
             () -> -driver.getRawAxis(translationAxis),
             () -> -driver.getRawAxis(strafeAxis),
-            () -> -driver.getRawAxis(rotationAxis)/2));
+            () -> driver.getRawAxis(rotationAxis)/2));
 
 
     // Configure the trigger bindings

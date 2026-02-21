@@ -39,10 +39,10 @@ public class SwerveDrive extends SubsystemBase
         // 10.5in is converted to meters to work with object.
         // Translation2d(x,y) == Translation2d(front, left)
         kinematics = new SwerveDriveKinematics(
-            new Translation2d(Units.inchesToMeters(10.5), Units.inchesToMeters(10.5)), // Front Left
-            new Translation2d(Units.inchesToMeters(10.5), Units.inchesToMeters(-10.5)), // Front Right
-            new Translation2d(Units.inchesToMeters(-10.5), Units.inchesToMeters(10.5)), // Back Left
-            new Translation2d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-10.5))  // Back Right
+            new Translation2d(Units.inchesToMeters(-10.5), Units.inchesToMeters(10.5)), // Front Left
+            new Translation2d(Units.inchesToMeters(10.5), Units.inchesToMeters(10.5)), // Front Right
+            new Translation2d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-10.5)), // Back Left
+            new Translation2d(Units.inchesToMeters(10.5), Units.inchesToMeters(-10.5))  // Back Right
         );
         
         gyro = new AHRS(NavXComType.kMXP_SPI); // Psuedo-constructor for generating gyroscope.
@@ -59,21 +59,10 @@ public class SwerveDrive extends SubsystemBase
     
     // Old drive method being overloaded
     public void drive(Translation2d translation, double rotation) {
-
-        // Assignment statment taken from constants and plopped in here
-        final SwerveDriveKinematics swerveKinematics =
-
-        //XY plane is robot relative with +x is forward (front of robot) and +y is left
-        // FIXME, Check that the positive and negative declarations below match with current robot module arangement
-        new SwerveDriveKinematics(
-            new Translation2d(-Units.inchesToMeters(27) / 2.0, -Units.inchesToMeters(20.5) / 2.0), // Mod 0
-            new Translation2d(-Units.inchesToMeters(27) / 2.0, Units.inchesToMeters(20.5) / 2.0), // Mod 1
-            new Translation2d(Units.inchesToMeters(27) / 2.0, -Units.inchesToMeters(20.5) / 2.0), // Mod 2
-            new Translation2d(Units.inchesToMeters(27) / 2.0, Units.inchesToMeters(20.5) / 2.0)); // Mod 3
         
         // This method was pulled from the old SwerveDrive code and is needed for
         // teleop control in RobotContainer through TeleopSwerve command
-        SwerveModuleState[] swerveModuleStates = swerveKinematics.toSwerveModuleStates(
+        SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(
                 translation.getX(), translation.getY(), rotation, getRotation2d()));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, 3.5); // Used to be a constant
