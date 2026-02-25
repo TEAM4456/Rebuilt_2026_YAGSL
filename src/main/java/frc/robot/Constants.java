@@ -71,4 +71,36 @@ public final class Constants {
     public static final boolean isOpenLoop = true;
     
   //}
+
+/*
+CanID LIST
+
+CanID 1: Drive Motor (Front Left)
+CanID 2: Turn Motor (Front Left)
+CanID 3: CANCoder (Front Left)
+CanID 4: Drive Motor (Front Right)
+CanID 5: Turn Motor (Front Right)
+CanID 6: CANCoder (Front Right)
+CanID 7: Drive Motor (Back Right)
+CanID 8: Turn Motor (Back Right)
+CanID 9: CANCoder (Back Right)
+CanID 10: Drive Motor (Back Left)
+CanID 11: Turn Motor (Back Left)
+CanID 12: CANCoder (Back Left)
+CanID 13: PDH
+CanID 14: CANdle
+CanID 15: Climber [brake mode]
+CanID 16: Spindexer [coast mode]
+CanID 17: Feeder [coast mode]
+CanID 18: Right Shooter [coast mode]
+CanID 19: Left Shooter [coast mode]
+CanID 20: Intake [coast mode]
+CanID 21: Intake Pivot [brake mode]
+CanID 22: 
+CanID 23: 
+CanID 24: 
+CanID 25:  
+
+*/
+
 }
