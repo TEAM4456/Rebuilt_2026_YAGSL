@@ -14,6 +14,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends SubsystemBase{
 
@@ -48,31 +49,48 @@ public class Elevator extends SubsystemBase{
     elevatorEncoder = elevatorMotor.getEncoder();
     elevatorLoop = elevatorMotor.getClosedLoopController();
     elevatorConfig = new SparkMaxConfig();
+
+    // Get elevator position for later reset?
     
   }
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
+  /** Moves the climber mechanism either up to a specific point or continuously at a set speed. We dont know which yet @return this command */
   public Command elevatorUp() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
       () -> {
+        // Goes to specific point
+        elevatorLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
+        // Or sets speed and continuouly runs
         elevatorMotor.set(0.2);
       });
   }
 
-  public Command elevatorAutoDoSomthingLater() {
+  /** Sets the inner and outer claws on the mechanism to their "Bar grab point" @return this command */
+  public Command clawHook() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
+    return run(
         () -> {
-          elevatorLoop.setSetpoint(-0, SparkBase.ControlType.kPosition);
+          // Run both as set point
+          innerLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
+          outerLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
         });
   }
+
+  /** Resets the elevator mechanism and claws to their starting positions @return this command */
+  public Command resetElevator() {
+    return run(
+      () -> {
+          // Run all as setpoints
+          elevatorLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
+          innerLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
+          outerLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
+
+        });
+  }
+
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
@@ -87,10 +105,12 @@ public class Elevator extends SubsystemBase{
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("elevatorPosition", elevatorEncoder.getPosition());
   }
-
+  /*
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+  */
 }
