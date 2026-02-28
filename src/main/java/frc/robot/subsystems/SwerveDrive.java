@@ -7,8 +7,11 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimelightHelpers;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import com.studica.frc.AHRS;
@@ -23,7 +26,7 @@ public class SwerveDrive extends SubsystemBase
     SwerveDriveOdometry odometry;
     AHRS gyro; // Psuedo-class representing a gyroscope.
     SwerveModule[] swerveModules; // Psuedo-class representing swerve modules.
-    
+
     // Constructor
     public SwerveDrive() {
     
@@ -108,6 +111,50 @@ public class SwerveDrive extends SubsystemBase
 
     public Rotation2d getRotation2d() {
         return gyro.getRotation2d();
+    }
+
+    public void updateOdometry() {
+        odometry.update(
+            gyro.getRotation2d(),
+            getCurrentSwerveModulePositions()
+        );
+
+        boolean useMegaTag2 = true; //set to false to use MegaTag1
+        boolean doRejectUpdate = false;
+        if(useMegaTag2 == false)
+        {
+            LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+        
+            if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
+            {
+                if(mt1.rawFiducials[0].ambiguity > .7)
+                {
+                    doRejectUpdate = true;
+                }
+                if(mt1.rawFiducials[0].distToCamera > 3)
+                {
+                    doRejectUpdate = true;
+                }
+            }
+            if(mt1.tagCount == 0)
+            {
+                doRejectUpdate = true;
+            }
+
+            if (useMegaTag2)
+            {
+                LimelightHelpers.SetRobotOrientation("limelight", odometry.getPoseMeters().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+                LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+                if(Math.abs(gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+                {
+                    doRejectUpdate = true;
+                }
+                if(mt2.tagCount == 0)
+                {
+                    doRejectUpdate = true;
+                }
+            }
+        }
     }
     
     @Override

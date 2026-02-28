@@ -71,7 +71,7 @@ public class Elevator extends SubsystemBase{
   public Command clawHook() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return run(
+    return runOnce(
         () -> {
           // Run both as set point
           innerLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
@@ -81,7 +81,7 @@ public class Elevator extends SubsystemBase{
 
   /** Resets the elevator mechanism and claws to their starting positions @return this command */
   public Command resetElevator() {
-    return run(
+    return runOnce(
       () -> {
           // Run all as setpoints
           elevatorLoop.setSetpoint(0, SparkBase.ControlType.kPosition);

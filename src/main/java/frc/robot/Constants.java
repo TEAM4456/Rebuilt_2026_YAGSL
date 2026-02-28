@@ -94,8 +94,8 @@ CanID 16: Spindexer [coast mode]
 CanID 17: Feeder [coast mode]
 CanID 18: Right Shooter [coast mode]
 CanID 19: Left Shooter [coast mode]
-CanID 20: Intake [coast mode]
-CanID 21: Intake Pivot [brake mode]
+CanID 20: Intake [coast mode] -- Intake
+CanID 21: Intake Pivot [brake mode] -- Intake
 CanID 22: 
 CanID 23: 
 CanID 24: 
