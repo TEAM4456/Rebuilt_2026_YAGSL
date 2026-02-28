@@ -82,12 +82,14 @@ public class RobotContainer {
     swerve.updateOdometry();
   }
 
+  /*
   public Command elevatorUpCommand() {
     return elevatorSubsystem.elevatorUp();
   }
   public Command resetElevatorCommand() {
     return elevatorSubsystem.resetElevator();
   }
+  */
   
   
   private void configureBindings() {
@@ -106,9 +108,6 @@ public class RobotContainer {
     chooser.setDefaultOption("nothing", null);
     //chooser.addOption("C to 1 R", centerTo1RightAutoCommand());
 
-
-
-    driver.a().onTrue(elevatorUpCommand());
   
   }
   

@@ -31,12 +31,12 @@ public class Intake extends SubsystemBase{
   /** Creates a new ExampleSubsystem. */
   public Intake() {
     //FIXME put in actual CAN IDs
-    //escalatorMotor = new SparkMax(, MotorType.kBrushless);
+    escalatorMotor = new SparkMax(21, MotorType.kBrushless);
     escalatorEncoder = escalatorMotor.getEncoder();
     escalatorLoop = escalatorMotor.getClosedLoopController();
     escalatorConfig = new SparkMaxConfig();
 
-    //feedMotor = new SparkMax(, MotorType.kBrushless);
+    feedMotor = new SparkMax(20, MotorType.kBrushless);
     feedEncoder = feedMotor.getEncoder();
     feedLoop = feedMotor.getClosedLoopController();
     feedConfig = new SparkMaxConfig();
