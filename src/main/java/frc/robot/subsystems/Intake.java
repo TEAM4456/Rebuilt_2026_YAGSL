@@ -17,7 +17,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake extends SubsystemBase{
-
+//TODO: escalator will have a right (CanID 21) and left (CanID 22)
   private SparkMax escalatorMotor;
   private RelativeEncoder escalatorEncoder;
   private SparkClosedLoopController escalatorLoop;
