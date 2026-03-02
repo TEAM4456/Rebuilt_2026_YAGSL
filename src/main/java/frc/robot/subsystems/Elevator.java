@@ -17,7 +17,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends SubsystemBase{
-
+//TODO: Change class name to Climber - should only have one motor CanID 15
   private SparkMax innerMotor;
   private RelativeEncoder innerEncoder;
   private SparkClosedLoopController innerLoop;
