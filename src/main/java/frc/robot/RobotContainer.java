@@ -20,6 +20,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TeleopSwerve;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.RobotConfig;
+
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -48,6 +51,8 @@ public class RobotContainer {
   private final Shooter shooterSubsystem = new Shooter();
   private final SwerveDrive swerve = new SwerveDrive();
 
+  private RobotConfig config;
+
   private final SendableChooser<Command> chooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -58,6 +63,7 @@ public class RobotContainer {
             () -> -driver.getRawAxis(translationAxis),
             () -> -driver.getRawAxis(strafeAxis),
             () -> driver.getRawAxis(rotationAxis)/2));
+
 
     chooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto:", chooser);
@@ -98,8 +104,12 @@ public class RobotContainer {
 
     // Look into this later
 
+
+    //trigger.b().onTrue().blowUp(strength=100);
+
+
     //new Trigger(elevatorSubsystem::exampleCondition)
-        //.onTrue(new ExampleCommand(elevatorSubsystem));
+    //onTrue(new ExampleCommand(elevatorSubsystem));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

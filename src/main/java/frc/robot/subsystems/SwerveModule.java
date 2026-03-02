@@ -18,6 +18,7 @@ import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -28,6 +29,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class SwerveModule {
 
+    public int moduleNumber;
     private SparkMax driveMotor; // Represents drive motor object
     private RelativeEncoder driveEncoder; // Represents internal encoder of the drive motor
     private SparkClosedLoopController driveController; // Not sure what this represents and its never called in the code
@@ -42,9 +44,10 @@ public class SwerveModule {
     private CANcoderConfiguration canCoderConfig;
     private Rotation2d lastAngle; // Not sure what this represents, old code that probably conflicts with other stuff
     
-    public SwerveModule(int driveMotorCANID, int turnMotorCANID, int canCoderCANID, boolean driveInverted) {
+    public SwerveModule(int driveMotorCANID, int turnMotorCANID, int canCoderCANID, boolean driveInverted, int moduleNumber) {
 
         // Instantiations for drive motor stuff
+        this.moduleNumber = moduleNumber;
         driveMotor = new SparkMax(driveMotorCANID, SparkLowLevel.MotorType.kBrushless);
         driveEncoder = driveMotor.getEncoder();
         driveController = driveMotor.getClosedLoopController();   
@@ -189,7 +192,9 @@ public class SwerveModule {
     public SwerveModuleState getState() {
         return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
     }
-    
+    public SwerveModulePosition getPosition() {
+        return new SwerveModulePosition(driveEncoder.getPosition(), getAngle());
+    }
     /**
     Set the swerve module state.
     @param state The swerve module state to set.
