@@ -7,7 +7,7 @@ package frc.robot;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveModule;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -46,7 +46,7 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   // The robot's subsystems and commands are defined here...
-  private final Elevator elevatorSubsystem = new Elevator();
+  private final Climber climberSubsystem = new Climber();
   private final Intake intakeSubsystem = new Intake();
   private final Shooter shooterSubsystem = new Shooter();
   private final SwerveDrive swerve = new SwerveDrive();

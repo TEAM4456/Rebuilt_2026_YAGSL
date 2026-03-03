@@ -16,7 +16,7 @@ import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Elevator extends SubsystemBase{
+public class Climber extends SubsystemBase{
 //TODO: Change class name to Climber - should only have one motor CanID 15
   private SparkMax innerMotor;
   private RelativeEncoder innerEncoder;
@@ -28,13 +28,13 @@ public class Elevator extends SubsystemBase{
   private SparkClosedLoopController outerLoop;
   private SparkMaxConfig outerConfig;
 
-  private SparkMax elevatorMotor;
-  private RelativeEncoder elevatorEncoder;
-  private SparkClosedLoopController elevatorLoop;
-  private SparkMaxConfig elevatorConfig;
+  private SparkMax climberMotor;
+  private RelativeEncoder climberEncoder;
+  private SparkClosedLoopController climberLoop;
+  private SparkMaxConfig climberConfig;
 
   /** Creates a new ExampleSubsystem. */
-  public Elevator() {
+  public Climber() {
     innerMotor = new SparkMax(14, MotorType.kBrushless);
     innerEncoder = innerMotor.getEncoder();
     innerLoop = innerMotor.getClosedLoopController();
@@ -45,25 +45,25 @@ public class Elevator extends SubsystemBase{
     outerLoop = outerMotor.getClosedLoopController();
     outerConfig = new SparkMaxConfig();
     
-    elevatorMotor = new SparkMax(16, MotorType.kBrushless);
-    elevatorEncoder = elevatorMotor.getEncoder();
-    elevatorLoop = elevatorMotor.getClosedLoopController();
-    elevatorConfig = new SparkMaxConfig();
+    climberMotor = new SparkMax(16, MotorType.kBrushless);
+    climberEncoder = climberMotor.getEncoder();
+    climberLoop = climberMotor.getClosedLoopController();
+    climberConfig = new SparkMaxConfig();
 
-    // Get elevator position for later reset?
+    // Get climber position for later reset?
     
   }
 
   /** Moves the climber mechanism either up to a specific point or continuously at a set speed. We dont know which yet @return this command */
-  public Command elevatorUp() {
+  public Command climberUp() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
       () -> {
         // Goes to specific point
-        elevatorLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
+        climberLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
         // Or sets speed and continuouly runs
-        elevatorMotor.set(0.2);
+        climberMotor.set(0.2);
       });
   }
 
@@ -79,12 +79,12 @@ public class Elevator extends SubsystemBase{
         });
   }
 
-  /** Resets the elevator mechanism and claws to their starting positions @return this command */
-  public Command resetElevator() {
+  /** Resets the climber mechanism and claws to their starting positions @return this command */
+  public Command resetClimber() {
     return runOnce(
       () -> {
           // Run all as setpoints
-          elevatorLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
+          climberLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
           innerLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
           outerLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
 
@@ -105,7 +105,7 @@ public class Elevator extends SubsystemBase{
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("elevatorPosition", elevatorEncoder.getPosition());
+    SmartDashboard.putNumber("climberPosition", climberEncoder.getPosition());
   }
   /*
   @Override
