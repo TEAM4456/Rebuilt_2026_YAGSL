@@ -89,7 +89,7 @@ public class SwerveDrive extends SubsystemBase
             e.printStackTrace();
         }
         
-
+        // Passing values seperated by commas
         AutoBuilder.configure(
             this::getPose, // Robot pose supplier
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -173,8 +173,7 @@ public class SwerveDrive extends SubsystemBase
         return poseEstimator.getEstimatedPosition();
      }
     public void resetPose(Pose2d pose) {
-        odometry.resetPosition(getRotation2d(), getModulePositions(),
-        pose);
+        odometry.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
     public ChassisSpeeds getRobotRelativeSpeeds() {

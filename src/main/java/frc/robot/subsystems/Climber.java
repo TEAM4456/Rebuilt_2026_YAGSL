@@ -36,6 +36,31 @@ public class Climber extends SubsystemBase{
     
   }
 
+  // Manual controls
+
+  /** Moves the climber mechanism at a set speed. Choose this if you want set speed @return this command */
+  public Command climberTurnUp() { 
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return run(
+      () -> {
+        // Goes to specific point
+        // climberLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
+        // Or sets speed and continuouly runs
+        climberMotor.set(0.2);
+      });
+  }
+
+  /** Moves the climber mechanism at a set speed down. Choose this if you want continuous speed @return this command */
+  public Command climberTurnDown() { 
+    return run(
+      () -> {
+        climberMotor.set(-0.2);
+      });
+  }
+
+  // Automatic controls
+
   /** Moves the climber mechanism up to a specific point. Choose this if at a set position @return this command */
   public Command climberUp() {
     // Inline construction of command goes here.
@@ -49,52 +74,24 @@ public class Climber extends SubsystemBase{
         // climberMotor.set(0.2);
       });
   }
-    /** Moves the climber mechanism at a set speed. Choose this if you want set speed @return this command */
-public Command climberTurnUp() { 
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return run(
-      () -> {
-        // Goes to specific point
-        // climberLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
-        // Or sets speed and continuouly runs
-        climberMotor.set(0.2);
-      });
-  }
- /** Moves the climber mechanism down to a specific point. Choose this if at a set position @return this command */
+
+  /** Moves the climber mechanism down to a specific point. Choose this if at a set position @return this command */
   public Command climberDown() { //TODO: Find out of this is necessary or if resetClimber is enough for going down
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
       () -> {
-        // Goes to specific point
         climberLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
-        // Or sets speed and continuouly runs
-        // climberMotor.set(0.2);
-      });
-  }
-    /** Moves the climber mechanism at a set speed(opposite of up). Choose this if you want set speed @return this command */
-public Command climberTurnDown() { 
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return run(
-      () -> {
-        // Goes to specific point
-        // climberLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
-        // Or sets speed and continuouly runs
-        climberMotor.set(-0.2);
       });
   }
 
-
-  /** Resets the climber mechanism and claws to their starting positions @return this command */
+  /** Resets the climber pivot to its starting positions @return this command */
   public Command resetClimber() {
     return runOnce(
       () -> {
-          // Run all as setpoints
-          climberLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
 
-        });
+        climberLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
+      });
   }
 
   @Override

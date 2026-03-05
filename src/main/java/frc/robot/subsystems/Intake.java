@@ -16,83 +16,92 @@ import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Intake extends SubsystemBase{
-//TODO: escalator will have a right (CanID 21) and left (CanID 22)
-  private SparkMax escalatorMotor;
-  private RelativeEncoder escalatorEncoder;
-  private SparkClosedLoopController escalatorLoop;
-  private SparkMaxConfig escalatorConfig;
+public class Intake extends SubsystemBase {
 
-  private SparkMax feedMotor;
-  private RelativeEncoder feedEncoder;
-  private SparkClosedLoopController feedLoop;
-  private SparkMaxConfig feedConfig;
+  private SparkMax intakePivotRightMotor;
+  private RelativeEncoder intakePivotRightEncoder;
+  private SparkClosedLoopController intakePivotRightLoop;
+  private SparkMaxConfig intakePivotRightConfig;
 
-  /** Creates a new ExampleSubsystem. */
+  private SparkMax intakePivotLeftMotor;
+  private RelativeEncoder intakePivotLeftEncoder;
+  private SparkClosedLoopController intakePivotLeftLoop;
+  private SparkMaxConfig intakePivotLeftConfig;
+
+  private SparkMax spinMotor;
+  private RelativeEncoder spinEncoder;
+  private SparkClosedLoopController spinLoop;
+  private SparkMaxConfig spinConfig;
+
   public Intake() {
     //FIXME put in actual CAN IDs
-    escalatorMotor = new SparkMax(21, MotorType.kBrushless);
-    escalatorEncoder = escalatorMotor.getEncoder();
-    escalatorLoop = escalatorMotor.getClosedLoopController();
-    escalatorConfig = new SparkMaxConfig();
+    intakePivotRightMotor = new SparkMax(21, MotorType.kBrushless);
+    intakePivotRightEncoder = intakePivotRightMotor.getEncoder();
+    intakePivotRightLoop = intakePivotRightMotor.getClosedLoopController();
+    intakePivotRightConfig = new SparkMaxConfig();
 
-    feedMotor = new SparkMax(20, MotorType.kBrushless);
-    feedEncoder = feedMotor.getEncoder();
-    feedLoop = feedMotor.getClosedLoopController();
-    feedConfig = new SparkMaxConfig();
-    
+    intakePivotLeftMotor = new SparkMax(22, MotorType.kBrushless);
+    intakePivotLeftEncoder = intakePivotLeftMotor.getEncoder();
+    intakePivotLeftLoop = intakePivotLeftMotor.getClosedLoopController();
+    intakePivotLeftConfig = new SparkMaxConfig();
+
+    spinMotor = new SparkMax(20, MotorType.kBrushless);
+    spinEncoder = spinMotor.getEncoder();
+    spinLoop = spinMotor.getClosedLoopController();
+    spinConfig = new SparkMaxConfig();
+  }
+
+  // Manual controls
+
+  /** Raises intake mechanism off the field @return this command */
+  public Command intakePivotTurnUp() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return run(
+      () -> {
+        
+        intakePivotRightMotor.set(0.2);
+        intakePivotLeftMotor.set(0.2);
+      });
   }
 
   /** Brings the intake mechanism down onto the field @return this command */
-  public Command intakeDown() {
+  public Command intakePivotTurnDown() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
       () -> {
-        escalatorLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
+
+        intakePivotRightMotor.set(-0.2);
+        intakePivotLeftMotor.set(-0.2);
       });
   }
-
-  /** Raises intake mechanism off the field @return this command */
-  public Command intakeUp() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
+  
+  /** Accelerates intake spin motor to its max speed (Still being determined) @return this command */
+  public Command spinStart() { //TODO: Determine intake speeds
     return run(
       () -> {
-        escalatorLoop.setSetpoint(0, SparkBase.ControlType.kPosition);
+
+        spinMotor.set(0.2);
       });
   }
 
-  /** Accelerates intake feed motor to its max speed (Still being determined) @return this command */
-  public Command intakeStart() {
+  /** Stops the spin motor @return this command */
+  public Command spinStop() {
     return run(
       () -> {
-        feedMotor.set(0);
+
+        spinMotor.set(0);
       });
   }
 
-  /** Stops the feed motor @return this command */
-  public Command intakeStop() {
-    return run(
-      () -> {
-        feedMotor.set(0); // Leave as zero because we are stopping motors
-      });
-  }
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
+  // Automatic controls
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("intakeSpeed", feedEncoder.getVelocity());
+    SmartDashboard.putNumber("intakePivotRightMotor", intakePivotRightEncoder.getPosition());
+    SmartDashboard.putNumber("intakePivotLeftMotor", intakePivotLeftEncoder.getPosition());
   }
   /*
   @Override

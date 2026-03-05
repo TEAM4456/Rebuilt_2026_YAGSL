@@ -52,42 +52,42 @@ public class Shooter extends SubsystemBase{
 
   }
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
+  /** Starts both shooters spinning in shoot direction @return this command */
   public Command shooterShoot() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
-        () -> {
-          // Set these to the same speed
-          shootLeftMotor.set(0.2);
-          shootRightMotor.set(0.2);
-          // Set feed motor to a different speed
-          //TODO: Make feedMotor occur after a delay
-          feedMotor.set(0.2);
-        });
+      () -> {
+        // Set these to the same speed
+        shootLeftMotor.set(0.2);
+        shootRightMotor.set(0.2);
+
+        // Set feed motor to a different speed
+        //TODO: Make feedMotor occur after a delay
+        feedMotor.set(0.2);
+      });
   }
+
+  /** Stops both shooters and feed motor basically shutting down the shooter @return this command */
   public Command shooterStop() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
         () -> {
+          // Set these to the same speed
           shootLeftMotor.set(0);
           shootRightMotor.set(0);
+
           feedMotor.set(0);
         });
   }
+
+  /** Use to reverse feeder and unclog jams potentially? @return this command */
   public Command feederReverse() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
-        () -> {
-          feedMotor.set(-0.2);
-        });
-  }
+      () -> {
+
+        feedMotor.set(-0.2);
+      });
+  }  
 
   @Override
   public void periodic() {
@@ -97,6 +97,7 @@ public class Shooter extends SubsystemBase{
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+    SmartDashboard.putNumber("shootRightMotor", shootRightEncoder.getPosition());
     SmartDashboard.putNumber("shootLeftMotor", shootLeftEncoder.getPosition());
   }
 }
