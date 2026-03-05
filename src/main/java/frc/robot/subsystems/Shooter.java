@@ -57,25 +57,36 @@ public class Shooter extends SubsystemBase{
    *
    * @return a command
    */
-  public Command ShooterShoot() {
+  public Command shooterShoot() {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
         () -> {
           // Set these to the same speed
-          shootLeftMotor.set(0);
-          shootRightMotor.set(0);
+          shootLeftMotor.set(0.2);
+          shootRightMotor.set(0.2);
+          // Set feed motor to a different speed
+          //TODO: Make feedMotor occur after a delay
+          feedMotor.set(0.2);
         });
   }
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
+  public Command shooterStop() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return run(
+        () -> {
+          shootLeftMotor.set(0);
+          shootRightMotor.set(0);
+          feedMotor.set(0);
+        });
+  }
+  public Command feederReverse() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return run(
+        () -> {
+          feedMotor.set(-0.2);
+        });
   }
 
   @Override
