@@ -13,6 +13,9 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 /* Most commands will be imported later when we deem them necessary...
   import frc.robot.commands.Autos;
   import frc.robot.commands.ExampleCommand;
@@ -71,18 +74,60 @@ public class RobotContainer {
     
     // Configure the trigger bindings
     configureBindings();
-    
-
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   }
+
+  /** Starts the shooter, waits 1 second, then starts the feeder. Execute only OnTrue */
+  public Command shooterShootCommand() {
+    return new SequentialCommandGroup(
+
+      shooterSubsystem.shooterShoot(),
+      new WaitCommand(1.0),
+      shooterSubsystem.feedStart()
+    );
+  }
+
+  /** Stops the shooter and feeder simultaniously */
+  public Command shooterStopCommand() {
+    return new ParallelCommandGroup(
+
+      shooterSubsystem.shooterStop(),
+      shooterSubsystem.feedStop()
+    );
+  }
+
+  /** If intake is down, raise it. If intake is up, lower it */
+  public Command intakeToggleCommand() {
+
+    if (intakeSubsystem.getIsDown())
+      return intakeSubsystem.intakePivotTurnUp();
+    else
+      return intakeSubsystem.intakePivotTurnDown();
+  }
+
+  /** Start intake feed motor */
+  public Command intakeStartCommand() {
+
+    return intakeSubsystem.spinStart();
+  }
+
+  /** Stop intake feed motor */
+  public Command intakeStopCommand() {
+
+    return intakeSubsystem.spinStop();
+  }
+
+  /** Moves elevator up at constant speed */
+  public Command elevatorManualUpCommand() {
+
+    return climberSubsystem.climberTurnUp();
+  }
+
+  /** Moves elevator down at constant speed */
+  public Command elevatorManualDownCommand() {
+
+    return climberSubsystem.climberTurnDown();
+  }
+
 
   // Calls the SwerveDrive "updateOdometry" method. Then this method is called in "Robot.java" for actual use. This is therefore a bridge method
   public void updateOdometry() {
@@ -101,24 +146,27 @@ public class RobotContainer {
   
   private void configureBindings() {
 
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
-    // Look into this later
-
-
-    //trigger.b().onTrue().blowUp(strength=100);
-
+    chooser.setDefaultOption("nothing", null);
 
     //new Trigger(elevatorSubsystem::exampleCondition)
     //onTrue(new ExampleCommand(elevatorSubsystem));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    //m_driverController.b().whileTrue(elevatorSubsystem.exampleMethodCommand());
-    
-    chooser.setDefaultOption("nothing", null);
-    //chooser.addOption("C to 1 R", centerTo1RightAutoCommand());
+    //m_driverController.b().whileTrue(elevatorSubsystem.exampleMethodCommand());    
 
+
+    // Maybe use whileTrue(), idk?
+    driver.rightTrigger().onTrue(shooterShootCommand());
+    driver.rightTrigger().onFalse(shooterStopCommand());
+
+    driver.leftBumper().onTrue(intakeToggleCommand());
+
+    driver.leftTrigger().whileTrue(intakeStartCommand());
+    driver.leftTrigger().whileFalse(intakeStopCommand());
+
+    driver.povUp().and(driver.povDown().negate()).whileTrue(elevatorManualUpCommand());
+    driver.povDown().and(driver.povUp().negate()).whileTrue(elevatorManualDownCommand());
   
   }
   

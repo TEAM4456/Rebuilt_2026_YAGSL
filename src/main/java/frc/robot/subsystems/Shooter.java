@@ -33,7 +33,6 @@ public class Shooter extends SubsystemBase{
   private SparkClosedLoopController feedLoop;
   private SparkMaxConfig feedConfig;
 
-  /** Creates a new ExampleSubsystem. */
   public Shooter() {
     shootLeftMotor = new SparkMax(19, MotorType.kBrushless);
     shootLeftEncoder = shootLeftMotor.getEncoder();
@@ -56,28 +55,33 @@ public class Shooter extends SubsystemBase{
   public Command shooterShoot() {
     return run(
       () -> {
+
         // Set these to the same speed
         shootLeftMotor.set(0.2);
         shootRightMotor.set(0.2);
-
-        // Set feed motor to a different speed
-        //TODO: Make feedMotor occur after a delay
-        feedMotor.set(0.2);
       });
   }
 
   /** Stops both shooters and feed motor basically shutting down the shooter @return this command */
   public Command shooterStop() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
-        () -> {
-          // Set these to the same speed
-          shootLeftMotor.set(0);
-          shootRightMotor.set(0);
+      () -> {
 
-          feedMotor.set(0);
-        });
+        // Set these to the same speed
+        shootLeftMotor.set(0);
+        shootRightMotor.set(0);
+
+        feedMotor.set(0);
+      });
+  }
+
+  /** Starts the feed motor @return this command */
+  public Command feedStart() {
+    return run(
+      () -> {
+
+        feedMotor.set(0.2);
+      });
   }
 
   /** Use to reverse feeder and unclog jams potentially? @return this command */
@@ -87,7 +91,16 @@ public class Shooter extends SubsystemBase{
 
         feedMotor.set(-0.2);
       });
-  }  
+  }
+
+  /** Stops the feed motor @return this command */
+  public Command feedStop() {
+    return run(
+      () -> {
+
+        feedMotor.set(0);
+      });
+  }
 
   @Override
   public void periodic() {

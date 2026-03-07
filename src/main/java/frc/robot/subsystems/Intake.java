@@ -33,6 +33,8 @@ public class Intake extends SubsystemBase {
   private SparkClosedLoopController spinLoop;
   private SparkMaxConfig spinConfig;
 
+  private boolean isDown = false;
+
   public Intake() {
     //FIXME put in actual CAN IDs
     intakePivotRightMotor = new SparkMax(21, MotorType.kBrushless);
@@ -55,28 +57,32 @@ public class Intake extends SubsystemBase {
 
   /** Raises intake mechanism off the field @return this command */
   public Command intakePivotTurnUp() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
       () -> {
         
         intakePivotRightMotor.set(0.2);
         intakePivotLeftMotor.set(0.2);
+
+        isDown = false;
       });
   }
 
   /** Brings the intake mechanism down onto the field @return this command */
   public Command intakePivotTurnDown() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
     return run(
       () -> {
 
         intakePivotRightMotor.set(-0.2);
         intakePivotLeftMotor.set(-0.2);
+
+        isDown = true;
       });
   }
   
+  public boolean getIsDown() {
+    return isDown;
+  }
+
   /** Accelerates intake spin motor to its max speed (Still being determined) @return this command */
   public Command spinStart() { //TODO: Determine intake speeds
     return run(
