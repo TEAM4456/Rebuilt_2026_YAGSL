@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.TeleopSwerve;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.RobotConfig;
 
 
@@ -134,19 +135,21 @@ public class RobotContainer {
     swerve.updateOdometry();
   }
 
-  /*
-  public Command elevatorUpCommand() {
-    return elevatorSubsystem.elevatorUp();
+  // =======================================================================
+  // ========================= AUTONOMOUS COMMANDS =========================
+  // =======================================================================
+
+  public Command TestAutoAutoCommand() {
+    
+    return new PathPlannerAuto("Test Auto");
   }
-  public Command resetElevatorCommand() {
-    return elevatorSubsystem.resetElevator();
-  }
-  */
   
   
   private void configureBindings() {
 
     chooser.setDefaultOption("nothing", null);
+
+    chooser.addOption("A autonomous routine to test the auto functionality", TestAutoAutoCommand());
 
     //new Trigger(elevatorSubsystem::exampleCondition)
     //onTrue(new ExampleCommand(elevatorSubsystem));

@@ -78,7 +78,7 @@ public class SwerveDrive extends SubsystemBase
         poseEstimator = new SwerveDrivePoseEstimator(// FROM CLASS SwerveDrivePoseEstimator DAN_F
             kinematics,
             getRotation2d(),
-            getCurrentSwerveModulePositions(),
+            getModulePositions(),
             new Pose2d(),
             stateStdDevs,
             visionStdDevs);
@@ -153,17 +153,7 @@ public class SwerveDrive extends SubsystemBase
         swerveModules[2].setState(swerveModuleStates[2]);
         swerveModules[3].setState(swerveModuleStates[3]);
     }
-    
-    // Fetch the current swerve module positions.
-    public SwerveModulePosition[] getCurrentSwerveModulePositions()
-    {
-        return new SwerveModulePosition[]{
-            new SwerveModulePosition(swerveModules[0].getDistance(), swerveModules[0].getAngle()), // Front-Left
-            new SwerveModulePosition(swerveModules[1].getDistance(), swerveModules[1].getAngle()), // Front-Right
-            new SwerveModulePosition(swerveModules[2].getDistance(), swerveModules[2].getAngle()), // Back-Left
-            new SwerveModulePosition(swerveModules[3].getDistance(), swerveModules[3].getAngle())  // Back-Right
-        };
-    }
+
 
     public Rotation2d getRotation2d() {
         return gyro.getRotation2d();
@@ -186,7 +176,7 @@ public class SwerveDrive extends SubsystemBase
         SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
         setStates(targetStates);
      }
-  public void setStates(SwerveModuleState[] targetStates) {
+    public void setStates(SwerveModuleState[] targetStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, Constants.maxSpeed);
 
     for (SwerveModule mod : swerveModules) {
@@ -207,49 +197,62 @@ public class SwerveDrive extends SubsystemBase
         positions[mod.moduleNumber] = mod.getPosition();
         }
         return positions;
-     }
+    }
 
     public void updateOdometry() {
-        odometry.update(
-            gyro.getRotation2d(),
-            getCurrentSwerveModulePositions()
-        );
+        poseEstimator.update(
+        gyro.getRotation2d(),
+        getModulePositions());
 
         boolean useMegaTag2 = true; //set to false to use MegaTag1
         boolean doRejectUpdate = false;
         if(useMegaTag2 == false)
         {
-            LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+        LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
         
-            if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
+        if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
+        {
+            if(mt1.rawFiducials[0].ambiguity > .7)
             {
-                if(mt1.rawFiducials[0].ambiguity > .7)
-                {
-                    doRejectUpdate = true;
-                }
-                if(mt1.rawFiducials[0].distToCamera > 3)
-                {
-                    doRejectUpdate = true;
-                }
+            doRejectUpdate = true;
             }
-            if(mt1.tagCount == 0)
+            if(mt1.rawFiducials[0].distToCamera > 3)
             {
-                doRejectUpdate = true;
+            doRejectUpdate = true;
             }
+        }
+        if(mt1.tagCount == 0)
+        {
+            doRejectUpdate = true;
+        }
 
-            if (useMegaTag2)
-            {
-                LimelightHelpers.SetRobotOrientation("limelight", odometry.getPoseMeters().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-                LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-                if(Math.abs(gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
-                {
-                    doRejectUpdate = true;
-                }
-                if(mt2.tagCount == 0)
-                {
-                    doRejectUpdate = true;
-                }
-            }
+        if(!doRejectUpdate)
+        {
+            poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
+            poseEstimator.addVisionMeasurement(
+                mt1.pose,
+                mt1.timestampSeconds);
+        }
+        }
+        else if (useMegaTag2 == true)
+        {
+        LimelightHelpers.SetRobotOrientation("limelight", poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+        if(Math.abs(gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+        {
+            doRejectUpdate = true;
+        }
+        if(mt2.tagCount == 0)
+        {
+            doRejectUpdate = true;
+        }
+        if(!doRejectUpdate)
+        {
+            poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+            poseEstimator.addVisionMeasurement(
+                mt2.pose,
+                mt2.timestampSeconds);
+        }
         }
     }
     
@@ -257,7 +260,7 @@ public class SwerveDrive extends SubsystemBase
     public void periodic()
     {
         // Update the odometry every run.
-        odometry.update(Rotation2d.fromDegrees(gyro.getAngle()),  getCurrentSwerveModulePositions());
+        odometry.update(Rotation2d.fromDegrees(gyro.getAngle()),  getModulePositions());
     }
     
 }
