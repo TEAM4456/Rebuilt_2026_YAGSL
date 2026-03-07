@@ -55,7 +55,7 @@ public final class Constants {
     Adjusted Degrees: 0, 235.1952, 27.94896, 43.06644
 
      */
-    public static final double turnOffsets[] = {0, 235.1952, 27.94896, 43.06644};
+    public static final double turnOffsets[] = {77.95908, 313.4178, 104.58972, 119.00376};
     // We just copied hard coded values from the JSON file "pidfproperties.json"
     public static final double pDriveMotor = 0.0020645;
     public static final double iDriveMotor = 0;

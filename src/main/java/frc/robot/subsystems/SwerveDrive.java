@@ -51,10 +51,10 @@ public class SwerveDrive extends SubsystemBase
         // 10.5in is converted to meters to work with object.
         // Translation2d(x,y) == Translation2d(front, left)
         kinematics = new SwerveDriveKinematics(
-            new Translation2d(Units.inchesToMeters(-10.5), Units.inchesToMeters(10.5)), // Front Left
-            new Translation2d(Units.inchesToMeters(10.5), Units.inchesToMeters(10.5)), // Front Right
-            new Translation2d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-10.5)), // Back Left
-            new Translation2d(Units.inchesToMeters(10.5), Units.inchesToMeters(-10.5))  // Back Right
+            new Translation2d(Units.inchesToMeters(10.5), Units.inchesToMeters(10.5)), // Front Left
+            new Translation2d(Units.inchesToMeters(10.5), Units.inchesToMeters(-10.5)), // Front Right
+            new Translation2d(Units.inchesToMeters(-10.5), Units.inchesToMeters(10.5)), // Back Left
+            new Translation2d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-10.5))  // Back Right
         );
         
         gyro = new AHRS(NavXComType.kMXP_SPI); // Psuedo-constructor for generating gyroscope.

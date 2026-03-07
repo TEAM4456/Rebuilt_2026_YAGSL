@@ -83,8 +83,11 @@ public class SwerveModule {
             //.velocityConversionFactor(Constants.turnVelocityConversionFactor); // Not used in old code so commented out for now
         turnConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pid(Constants.pTurnMotor, Constants.iTurnMotor, Constants.dTurnMotor);
+            .pid(Constants.pTurnMotor, Constants.iTurnMotor, Constants.dTurnMotor)
+            .positionWrappingEnabled(true)
+            .positionWrappingInputRange(0, 360);
         turnMotor.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         
 
         int arrayGettingNumber = 0;
@@ -115,7 +118,7 @@ public class SwerveModule {
         // Perform the alignment using degrees instead of absolute rotations.
         double tempNum = (canCoder.getAbsolutePosition().getValueAsDouble() * 360) - Constants.turnOffsets[arrayGettingNumber];
 
-        // double tempNum = (canCoder.getAbsolutePosition().getValueAsDouble()) - Constants.turnOffsets[arrayGettingNumber];        
+        //double tempNum = (canCoder.getAbsolutePosition().getValueAsDouble()) - Constants.turnOffsets[arrayGettingNumber];        
         turnEncoder.setPosition(tempNum);
 
         // Methods to reset everything to factory default, probably want to use these in competition

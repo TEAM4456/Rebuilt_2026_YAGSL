@@ -51,11 +51,13 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   // The robot's subsystems and commands are defined here...
+  /*
   private final Climber climberSubsystem = new Climber();
   private final Intake intakeSubsystem = new Intake();
   private final Shooter shooterSubsystem = new Shooter();
+  */
   private final SwerveDrive swerve = new SwerveDrive();
-
+  
   private RobotConfig config;
 
   private final SendableChooser<Command> chooser;
@@ -65,8 +67,8 @@ public class RobotContainer {
     swerve.setDefaultCommand(
         new TeleopSwerve(
             swerve,
-            () -> -driver.getRawAxis(translationAxis),
-            () -> -driver.getRawAxis(strafeAxis),
+            () -> driver.getRawAxis(translationAxis), // Used to have negatives in front
+            () -> driver.getRawAxis(strafeAxis), // This too
             () -> driver.getRawAxis(rotationAxis)/2));
 
 
@@ -77,58 +79,57 @@ public class RobotContainer {
     configureBindings();
   }
 
-  /** Starts the shooter, waits 1 second, then starts the feeder. Execute only OnTrue */
-  public Command shooterShootCommand() {
-    return new SequentialCommandGroup(
+  // /** Starts the shooter, waits 1 second, then starts the feeder. Execute only OnTrue */
+  // public Command shooterShootCommand() {
+  //   return new SequentialCommandGroup(
 
-      shooterSubsystem.shooterShoot(),
-      new WaitCommand(1.0),
-      shooterSubsystem.feedStart()
-    );
-  }
+  //     shooterSubsystem.shooterShoot(),
+  //     new WaitCommand(1.0),
+  //     shooterSubsystem.feedStart()
+  //   );
+  // }
 
-  /** Stops the shooter and feeder simultaniously */
-  public Command shooterStopCommand() {
-    return new ParallelCommandGroup(
+  // /** Stops the shooter and feeder simultaniously */
+  // public Command shooterStopCommand() {
+  //   return new ParallelCommandGroup(
 
-      shooterSubsystem.shooterStop(),
-      shooterSubsystem.feedStop()
-    );
-  }
+  //     shooterSubsystem.shooterStop(),
+  //     shooterSubsystem.feedStop()
+  //   );
+  // }
 
-  /** If intake is down, raise it. If intake is up, lower it */
-  public Command intakeToggleCommand() {
+  // /** If intake is down, raise it. If intake is up, lower it */
+  // public Command intakeToggleCommand() {
 
-    if (intakeSubsystem.getIsDown())
-      return intakeSubsystem.intakePivotTurnUp();
-    else
-      return intakeSubsystem.intakePivotTurnDown();
-  }
+  //   if (intakeSubsystem.getIsDown())
+  //     return intakeSubsystem.intakePivotTurnUp();
+  //   else
+  //     return intakeSubsystem.intakePivotTurnDown();
+  // }
 
-  /** Start intake feed motor */
-  public Command intakeStartCommand() {
+  // /** Start intake feed motor */
+  // public Command intakeStartCommand() {
 
-    return intakeSubsystem.spinStart();
-  }
+  //   return intakeSubsystem.spinStart();
+  // }
 
-  /** Stop intake feed motor */
-  public Command intakeStopCommand() {
+  // /** Stop intake feed motor */
+  // public Command intakeStopCommand() {
 
-    return intakeSubsystem.spinStop();
-  }
+  //   return intakeSubsystem.spinStop();
+  // }
 
-  /** Moves elevator up at constant speed */
-  public Command elevatorManualUpCommand() {
+  // /** Moves elevator up at constant speed */
+  // public Command elevatorManualUpCommand() {
 
-    return climberSubsystem.climberTurnUp();
-  }
+  //   return climberSubsystem.climberTurnUp();
+  // }
 
-  /** Moves elevator down at constant speed */
-  public Command elevatorManualDownCommand() {
+  // /** Moves elevator down at constant speed */
+  // public Command elevatorManualDownCommand() {
 
-    return climberSubsystem.climberTurnDown();
-  }
-
+  //   return climberSubsystem.climberTurnDown();
+  // }
 
   // Calls the SwerveDrive "updateOdometry" method. Then this method is called in "Robot.java" for actual use. This is therefore a bridge method
   public void updateOdometry() {
@@ -160,6 +161,7 @@ public class RobotContainer {
 
 
     // Maybe use whileTrue(), idk?
+    /*
     driver.rightTrigger().onTrue(shooterShootCommand());
     driver.rightTrigger().onFalse(shooterStopCommand());
 
@@ -170,6 +172,7 @@ public class RobotContainer {
 
     driver.povUp().and(driver.povDown().negate()).whileTrue(elevatorManualUpCommand());
     driver.povDown().and(driver.povUp().negate()).whileTrue(elevatorManualDownCommand());
+    */
   
   }
   
