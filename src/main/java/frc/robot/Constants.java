@@ -55,13 +55,14 @@ public final class Constants {
     Adjusted Degrees: 0, 235.1952, 27.94896, 43.06644
 
      */
-    public static final double turnOffsets[] = {77.95908, 313.4178, 104.58972, 119.00376};
+    // Rotation values from Pheonix tuner values {0.217285, 0.870361, 0.289307, 0.331543}
+    public static final double turnOffsets[] = {78.2226, 313.32996, 104.15052, 119.35548};
     // We just copied hard coded values from the JSON file "pidfproperties.json"
     public static final double pDriveMotor = 0.0020645;
     public static final double iDriveMotor = 0;
     public static final double dDriveMotor = 0;
 
-    public static final double pTurnMotor = 0.0020645;
+    public static final double pTurnMotor = 0.0035; // Increased to help deal with wheels not getting to their proper offsets
     public static final double iTurnMotor = 0;
     public static final double dTurnMotor = 0;
 
