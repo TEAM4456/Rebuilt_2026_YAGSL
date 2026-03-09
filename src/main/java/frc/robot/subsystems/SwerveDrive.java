@@ -5,6 +5,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -32,6 +34,7 @@ public class SwerveDrive extends SubsystemBase
     SwerveDriveOdometry odometry;
     AHRS gyro; // Psuedo-class representing a gyroscope.
     SwerveModule[] swerveModules; // Psuedo-class representing swerve modules.
+    public Field2d field;
 
     SwerveDrivePoseEstimator poseEstimator;
     public RobotConfig config;
@@ -67,7 +70,8 @@ public class SwerveDrive extends SubsystemBase
             // Front-Left, Front-Right, Back-Left, Back-Right
             new Pose2d(0,0,new Rotation2d()) // x=0, y=0, heading=0
         );
-
+        
+        field = new Field2d();
 
         // STARTING CREATION OF AUTOBUILDER CONFIG HERE AT THE BOTTOM OF THE CONSTRUCTOR
 
@@ -261,6 +265,8 @@ public class SwerveDrive extends SubsystemBase
     {
         // Update the odometry every run.
         odometry.update(Rotation2d.fromDegrees(gyro.getAngle()),  getModulePositions());
+        SmartDashboard.putData("Field", field);
+        field.setRobotPose(getPose());
     }
     
 }

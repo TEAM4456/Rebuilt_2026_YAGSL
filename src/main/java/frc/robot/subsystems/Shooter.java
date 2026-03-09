@@ -110,7 +110,7 @@ public class Shooter extends SubsystemBase{
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-    SmartDashboard.putNumber("shootRightMotor", shootRightEncoder.getPosition());
-    SmartDashboard.putNumber("shootLeftMotor", shootLeftEncoder.getPosition());
+    SmartDashboard.putNumber("shootRightMotor", shootRightEncoder.getVelocity());
+    SmartDashboard.putNumber("shootLeftMotor", shootLeftEncoder.getVelocity());
   }
 }
