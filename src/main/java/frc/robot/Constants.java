@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
-import java.io.InputStreamReader;
 import edu.wpi.first.math.util.Units;
 
 
@@ -29,7 +26,7 @@ public final class Constants {
     */
 
     // SWERVE MODULE MOTOR CREATION VALUES BELOW
-    public static final boolean driveInverted = false; // NOT BEING USED
+    public static final boolean driveInverted = false; 
     public static final int driveSmartCurrentLimit = 40;
     public static final double driveVoltageCompensation = 12.0;
     public static final double drivePotentialConversionFactor = Units.inchesToMeters(4 * Math.PI)/5.36; // Taken from the old constants file, most likely should change
@@ -39,7 +36,7 @@ public final class Constants {
     public static final int turnSmartCurrentLimit = 20;
     public static final double turnVoltageCompensation = 12.0;
     public static final double turnPotentialConversionFactor = 360/(12.8); // Taken from the old constants file as well
-    public static final double turnVelocityConversionFactor = 0; // Not currently used
+    public static final double turnVelocityConversionFactor = 0; 
 
     // Used to set turnMotors to their offsets in order of canCoder ID's in order of 3, 6, 9, 12
     /*

@@ -13,8 +13,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkBase.ControlType;
 
 public class Shooter extends SubsystemBase{
 

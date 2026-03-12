@@ -5,9 +5,7 @@
 
 package frc.robot;
 
-import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrive;
-import frc.robot.subsystems.SwerveModule;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -30,7 +28,6 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 /**
@@ -50,11 +47,10 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   // The robot's subsystems and commands are defined here...
-  /*
-  private final Climber climberSubsystem = new Climber();
+
   private final Intake intakeSubsystem = new Intake();
   private final Shooter shooterSubsystem = new Shooter();
-  */
+
   private final SwerveDrive swerve = new SwerveDrive();
   
   private RobotConfig config;
@@ -79,56 +75,45 @@ public class RobotContainer {
   }
 
   // /** Starts the shooter, waits 1 second, then starts the feeder. Execute only OnTrue */
-  // public Command shooterShootCommand() {
-  //   return new SequentialCommandGroup(
+  public Command shooterShootCommand() {
+    return new SequentialCommandGroup(
 
-  //     shooterSubsystem.shooterShoot(),
-  //     new WaitCommand(1.0),
-  //     shooterSubsystem.feedStart()
-  //   );
-  // }
+      shooterSubsystem.shooterShoot(),
+      new WaitCommand(1.0),
+      shooterSubsystem.feedStart()
+    );
+  }
 
   // /** Stops the shooter and feeder simultaniously */
-  // public Command shooterStopCommand() {
-  //   return new ParallelCommandGroup(
+  public Command shooterStopCommand() {
+    return new ParallelCommandGroup(
 
-  //     shooterSubsystem.shooterStop(),
-  //     shooterSubsystem.feedStop()
-  //   );
-  // }
+      shooterSubsystem.shooterStop(),
+      shooterSubsystem.feedStop()
+    );
+  }
 
   // /** If intake is down, raise it. If intake is up, lower it */
-  // public Command intakeToggleCommand() {
+  public Command intakeToggleCommand() {
 
-  //   if (intakeSubsystem.getIsDown())
-  //     return intakeSubsystem.intakePivotTurnUp();
-  //   else
-  //     return intakeSubsystem.intakePivotTurnDown();
-  // }
+    if (intakeSubsystem.getIsDown())
+      return intakeSubsystem.intakePivotTurnUp();
+    else
+      return intakeSubsystem.intakePivotTurnDown();
+  }
 
   // /** Start intake feed motor */
-  // public Command intakeStartCommand() {
+  public Command intakeStartCommand() {
 
-  //   return intakeSubsystem.spinStart();
-  // }
+    return intakeSubsystem.spinStart();
+  }
 
   // /** Stop intake feed motor */
-  // public Command intakeStopCommand() {
+  public Command intakeStopCommand() {
 
-  //   return intakeSubsystem.spinStop();
-  // }
+    return intakeSubsystem.spinStop();
+  }
 
-  // /** Moves elevator up at constant speed */
-  // public Command elevatorManualUpCommand() {
-
-  //   return climberSubsystem.climberTurnUp();
-  // }
-
-  // /** Moves elevator down at constant speed */
-  // public Command elevatorManualDownCommand() {
-
-  //   return climberSubsystem.climberTurnDown();
-  // }
 
   // Calls the SwerveDrive "updateOdometry" method. Then this method is called in "Robot.java" for actual use. This is therefore a bridge method
   public void updateOdometry() {
@@ -151,16 +136,10 @@ public class RobotContainer {
 
     chooser.addOption("A autonomous routine to test the auto functionality", TestAutoAutoCommand());
 
-    //new Trigger(elevatorSubsystem::exampleCondition)
-    //onTrue(new ExampleCommand(elevatorSubsystem));
-
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    //m_driverController.b().whileTrue(elevatorSubsystem.exampleMethodCommand());    
-
 
     // Maybe use whileTrue(), idk?
-    /*
     driver.rightTrigger().onTrue(shooterShootCommand());
     driver.rightTrigger().onFalse(shooterStopCommand());
 
@@ -168,11 +147,6 @@ public class RobotContainer {
 
     driver.leftTrigger().whileTrue(intakeStartCommand());
     driver.leftTrigger().whileFalse(intakeStopCommand());
-
-    driver.povUp().and(driver.povDown().negate()).whileTrue(elevatorManualUpCommand());
-    driver.povDown().and(driver.povUp().negate()).whileTrue(elevatorManualDownCommand());
-    */
-  
   }
   
   // Look into this later

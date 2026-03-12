@@ -1,12 +1,8 @@
 package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.CANcoder;
-import java.io.ObjectInputFilter.Config;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
-import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 
 import com.revrobotics.spark.SparkMax;
@@ -23,7 +19,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.thethriftybot.server.CAN;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
@@ -68,7 +63,7 @@ public class SwerveModule {
         driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters); // Aplies config to drive motor
 
 
-        // Same proccess above is used for turn motor instantiations and config
+        // Same process above is used for turn motor instantiations and config
         turnMotor = new SparkMax(turnMotorCANID, SparkLowLevel.MotorType.kBrushless);
         turnEncoder = turnMotor.getEncoder();
         turnController = turnMotor.getClosedLoopController();
@@ -106,7 +101,7 @@ public class SwerveModule {
         }
 
 
-        // Instatiations for canCoder stuff
+        // Instantiations for canCoder stuff
         canCoder = new CANcoder(canCoderCANID);
         canCoderConfig = new CANcoderConfiguration();
         // Gets the magnetSensor property from the canCoderConfig to apply magnet sensor config using method chaining
@@ -168,7 +163,7 @@ public class SwerveModule {
                 ? lastAngle
                 : desiredState.angle;
 
-        turnController.setReference(angle.getDegrees(), ControlType.kPosition);
+        turnController.setSetpoint(angle.getDegrees(), ControlType.kPosition);
         lastAngle = angle;
     }
 
@@ -203,8 +198,8 @@ public class SwerveModule {
     */
     public void setState(SwerveModuleState state)
     {
-          turnController.setReference(state.angle.getDegrees(), ControlType.kPosition);
-          driveController.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
+          turnController.setSetpoint(state.angle.getDegrees(), ControlType.kPosition);
+          driveController.setSetpoint(state.speedMetersPerSecond, ControlType.kVelocity);
     }
 
 }

@@ -8,9 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrive;
-//import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class TeleopSwerve extends Command {
@@ -18,7 +16,6 @@ public class TeleopSwerve extends Command {
   private DoubleSupplier translationSup;
   private DoubleSupplier strafeSup;
   private DoubleSupplier rotationSup;
-//  private BooleanSupplier robotCentricSup;
 
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(1.5);
   private SlewRateLimiter strafeLimiter = new SlewRateLimiter(1.5);
@@ -28,15 +25,13 @@ public class TeleopSwerve extends Command {
       SwerveDrive s_Swerve,
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
-      DoubleSupplier rotationSup
-      /*BooleanSupplier robotCentricSup*/) {
+      DoubleSupplier rotationSup) {
     this.s_Swerve = s_Swerve;
     addRequirements(s_Swerve);
 
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
     this.rotationSup = rotationSup;
-    //this.robotCentricSup = robotCentricSup;
   }
 
   @Override
@@ -56,7 +51,6 @@ public class TeleopSwerve extends Command {
     s_Swerve.drive(
         new Translation2d(translationVal, strafeVal).times(3.5),
         rotationVal * 11.5
-        //!robotCentricSup.getAsBoolean(),
         );
   }
 }

@@ -12,8 +12,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkBase.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake extends SubsystemBase {
@@ -36,7 +34,6 @@ public class Intake extends SubsystemBase {
   private boolean isDown = false;
 
   public Intake() {
-    //FIXME put in actual CAN IDs
     intakePivotRightMotor = new SparkMax(21, MotorType.kBrushless);
     intakePivotRightEncoder = intakePivotRightMotor.getEncoder();
     intakePivotRightLoop = intakePivotRightMotor.getClosedLoopController();

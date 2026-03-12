@@ -1,4 +1,3 @@
-// Import relevant classes.
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -44,10 +43,10 @@ public class SwerveDrive extends SubsystemBase
     
         swerveModules = new SwerveModule[4]; // Create swerve modules here.
 
-        swerveModules[3] = new SwerveModule(7, 8, 9, false, 3); // Back right
-        swerveModules[2] = new SwerveModule(10, 11, 12, false, 2); // Back left
-        swerveModules[1] = new SwerveModule(4, 5, 6, false, 1); // Front right
         swerveModules[0] = new SwerveModule(1, 2, 3, false, 0); // Front left
+        swerveModules[1] = new SwerveModule(4, 5, 6, false, 1); // Front right
+        swerveModules[2] = new SwerveModule(10, 11, 12, false, 2); // Back left
+        swerveModules[3] = new SwerveModule(7, 8, 9, false, 3); // Back right
         
         // Create SwerveDriveKinematics object
         // 10.5in from center of robot to center of wheel.
@@ -73,7 +72,7 @@ public class SwerveDrive extends SubsystemBase
         
         field = new Field2d();
 
-        // STARTING CREATION OF AUTOBUILDER CONFIG HERE AT THE BOTTOM OF THE CONSTRUCTOR
+        /**  STARTING CREATION OF AUTOBUILDER CONFIG HERE AT THE BOTTOM OF THE CONSTRUCTOR */
 
 
         var stateStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(5));
@@ -120,7 +119,6 @@ public class SwerveDrive extends SubsystemBase
         
     }
     
-    // Old drive method being overloaded
     public void drive(Translation2d translation, double rotation) {
         
         // This method was pulled from the old SwerveDrive code and is needed for
@@ -129,35 +127,12 @@ public class SwerveDrive extends SubsystemBase
             ChassisSpeeds.fromFieldRelativeSpeeds(
                 translation.getX(), translation.getY(), rotation, getRotation2d()));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, 3.5); // Used to be a constant
-        
-        // A for each loop that sets the desired state of each swerve module on the robot
-        /*for (SwerveModule tempMod : swerveModules) {
-            tempMod.setDesiredState(swerveModuleStates[tempMod.moduleNumber]);
-        }
-        */
 
-        // A normal for loop that apples teh swerveModuleStates to each module
+        // A normal for loop that apples the swerveModuleStates to each module
         for (int i = 0; i < 4; i++) {
             swerveModules[i].setDesiredState(swerveModuleStates[i]);
         }
     }
-
-    // Simple drive function also being overloaded. provided by YAGSL? Not used currently in our code but nice to have around
-    public void drive()
-    {
-        // Create test ChassisSpeeds going X = 14in, Y=4in, and spins at 30deg per second.
-        ChassisSpeeds testSpeeds = new ChassisSpeeds(Units.inchesToMeters(14), Units.inchesToMeters(4), Units.degreesToRadians(30));
-        
-        // Get the SwerveModuleStates for each module given the desired speeds.
-        SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(testSpeeds);
-        // Output order is Front-Left, Front-Right, Back-Left, Back-Right
-        
-        swerveModules[0].setState(swerveModuleStates[0]);
-        swerveModules[1].setState(swerveModuleStates[1]);
-        swerveModules[2].setState(swerveModuleStates[2]);
-        swerveModules[3].setState(swerveModuleStates[3]);
-    }
-
 
     public Rotation2d getRotation2d() {
         return gyro.getRotation2d();
