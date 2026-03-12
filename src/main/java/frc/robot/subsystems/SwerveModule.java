@@ -161,7 +161,6 @@ public class SwerveModule {
         setSpeed(desiredState, Constants.isOpenLoop); // Old code said this was "boolean field relative", PLEASE LOOK INTO THIS
     }
 
-    // FIXME, Constants here need to be moved to the Constants file
     private void setAngle(SwerveModuleState desiredState) {
         // Prevent rotating module if speed is less then 1%. Prevents jittering.
         Rotation2d angle =

@@ -8,7 +8,6 @@ package frc.robot;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveModule;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -73,7 +72,7 @@ public class RobotContainer {
 
 
     chooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto:", chooser);
+    SmartDashboard.putData("auto", chooser);
     
     // Configure the trigger bindings
     configureBindings();
