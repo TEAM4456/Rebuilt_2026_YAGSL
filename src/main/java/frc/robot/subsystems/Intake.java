@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -44,7 +45,7 @@ public class Intake extends SubsystemBase {
 
     intakePivotRightConfig = new SparkMaxConfig();
     intakePivotRightConfig.idleMode(IdleMode.kBrake);
-    intakePivotRightConfig.closedLoop.pid(1, 0, 0);
+    intakePivotRightConfig.closedLoop.pid(0.01, 0, 0);
     intakePivotRightConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     intakePivotRightConfig.openLoopRampRate(0.5);
     intakePivotRightConfig.smartCurrentLimit(40);
@@ -57,7 +58,7 @@ public class Intake extends SubsystemBase {
 
     intakePivotLeftConfig = new SparkMaxConfig();
     intakePivotLeftConfig.idleMode(IdleMode.kBrake);
-    intakePivotLeftConfig.closedLoop.pid(1, 0, 0);
+    intakePivotLeftConfig.closedLoop.pid(0.01, 0, 0);
     intakePivotLeftConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     intakePivotLeftConfig.openLoopRampRate(0.5);
     intakePivotLeftConfig.smartCurrentLimit(40);
@@ -97,8 +98,8 @@ public class Intake extends SubsystemBase {
     return run(
       () -> {
 
-        intakePivotRightMotor.set(-0.2);
-        intakePivotLeftMotor.set(-0.2);
+        intakePivotRightLoop.setSetpoint(8.071450233, ControlType.kPosition);
+        intakePivotLeftLoop.setSetpoint(-7.85716247, ControlType.kPosition);
 
         isDown = true;
       });
@@ -126,12 +127,22 @@ public class Intake extends SubsystemBase {
       });
   }
 
+  public Command spinTestSetPosition() {
+    return run(
+      () -> {
+        
+        spinLoop.setSetpoint(-6906, ControlType.kPosition);
+      });
+  }
+
   // Automatic controls
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Intake Spinner Speed", spinEncoder.getVelocity());
+    SmartDashboard.putNumber("Spin Position Test", spinEncoder.getPosition());
+    SmartDashboard.putBoolean("Intake Is Down", isDown);
 
     SmartDashboard.putNumber("Intake Pivot Right Motor", intakePivotRightEncoder.getPosition());
     SmartDashboard.putNumber("Intake Pivot Left Motor", intakePivotLeftEncoder.getPosition());

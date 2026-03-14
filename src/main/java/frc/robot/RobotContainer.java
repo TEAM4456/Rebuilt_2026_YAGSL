@@ -118,6 +118,11 @@ public class RobotContainer {
     return intakeSubsystem.spinStop();
   }
 
+  public Command testSetpointCommand() {
+
+    return intakeSubsystem.spinTestSetPosition();
+  }
+
 
   // Calls the SwerveDrive "updateOdometry" method. Then this method is called in "Robot.java" for actual use. This is therefore a bridge method
   public void updateOdometry() {
@@ -143,11 +148,13 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
 
+    driver.a().onTrue(testSetpointCommand());
+
     // Maybe use whileTrue(), idk?
     driver.rightTrigger().onTrue(shooterShootCommand());
     driver.rightTrigger().onFalse(shooterStopCommand());
 
-    //driver.leftBumper().onTrue(intakeToggleCommand());
+    driver.leftBumper().onTrue(intakeToggleCommand());
 
     driver.leftTrigger().whileTrue(intakeStartCommand());
     driver.leftTrigger().whileFalse(intakeStopCommand());

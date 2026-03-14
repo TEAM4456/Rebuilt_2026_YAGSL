@@ -9,10 +9,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.ClosedLoopSlot;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -39,7 +42,19 @@ public class Shooter extends SubsystemBase{
 
     shootLeftConfig = new SparkMaxConfig();
     shootLeftConfig.idleMode(IdleMode.kCoast);
-    shootLeftConfig.closedLoop.pid(1, 0, 0);
+    shootLeftConfig.closedLoop
+    .p(0.0001, ClosedLoopSlot.kSlot1)
+    .i(0, ClosedLoopSlot.kSlot1)
+    .d(0, ClosedLoopSlot.kSlot1)
+    .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
+    .feedForward
+    // kV is now in Volts, so we multiply by the nominal voltage (12V)
+    .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
+
+    shootLeftConfig.closedLoop.maxMotion.
+      cruiseVelocity(1000).
+      maxAcceleration(50).
+      allowedProfileError(1);
     shootLeftConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     shootLeftConfig.openLoopRampRate(0.5);
     shootLeftConfig.smartCurrentLimit(40);
@@ -52,7 +67,20 @@ public class Shooter extends SubsystemBase{
 
     shootRightConfig = new SparkMaxConfig();
     shootRightConfig.idleMode(IdleMode.kCoast);
-    shootRightConfig.closedLoop.pid(1, 0, 0);
+
+    shootRightConfig.closedLoop
+      .p(0.0001, ClosedLoopSlot.kSlot1)
+      .i(0, ClosedLoopSlot.kSlot1)
+      .d(0, ClosedLoopSlot.kSlot1)
+      .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
+      .feedForward
+      // kV is now in Volts, so we multiply by the nominal voltage (12V)
+      .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
+
+    shootRightConfig.closedLoop.maxMotion.
+      cruiseVelocity(1000).
+      maxAcceleration(50).
+      allowedProfileError(1);
     shootRightConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     shootRightConfig.openLoopRampRate(0.5);
     shootRightConfig.smartCurrentLimit(40);
@@ -65,8 +93,8 @@ public class Shooter extends SubsystemBase{
       () -> {
 
         // Set these to the same speed
-        shootLeftMotor.set(0.8);
-        shootRightMotor.set(-0.8);
+        shootLeftLoop.setSetpoint(4400, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        shootRightLoop.setSetpoint(-4400, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
       });
   }
 
