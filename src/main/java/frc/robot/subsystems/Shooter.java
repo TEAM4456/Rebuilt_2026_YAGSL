@@ -96,7 +96,7 @@ public class Shooter extends SubsystemBase{
         shootLeftMotor.set(0);
         shootRightMotor.set(0);
 
-        indexMotor.set(0);
+        indexStop(); // Needed to be called here to avoid a "multiple thread exception" in robot container
       });
   }
 

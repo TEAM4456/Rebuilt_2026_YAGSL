@@ -86,11 +86,8 @@ public class RobotContainer {
 
   // /** Stops the shooter and feeder simultaniously */
   public Command shooterStopCommand() {
-    return new ParallelCommandGroup(
-
-      shooterSubsystem.shooterStop(),
-      shooterSubsystem.indexStop()
-    );
+    
+    return shooterSubsystem.shooterStop();
   }
 
   // /** If intake is down, raise it. If intake is up, lower it */
