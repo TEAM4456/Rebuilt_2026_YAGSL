@@ -8,6 +8,7 @@ package frc.robot;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShootFeed;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -50,6 +51,7 @@ public class RobotContainer {
 
   private final Intake intakeSubsystem = new Intake();
   private final Shooter shooterSubsystem = new Shooter();
+  private final ShootFeed shootFeedSubsystem = new ShootFeed();
 
   private final SwerveDrive swerve = new SwerveDrive();
   
@@ -76,18 +78,23 @@ public class RobotContainer {
 
   // /** Starts the shooter, waits 1 second, then starts the feeder. Execute only OnTrue */
   public Command shooterShootCommand() {
-    return new SequentialCommandGroup(
+    return new ParallelCommandGroup(
 
       shooterSubsystem.shooterShoot(),
-      new WaitCommand(1.0),
-      shooterSubsystem.indexStart()
+      new SequentialCommandGroup(
+        
+        new WaitCommand(1.0),
+        shootFeedSubsystem.shootFeedStart()
+      )
     );
   }
 
   // /** Stops the shooter and feeder simultaniously */
   public Command shooterStopCommand() {
-    
-    return shooterSubsystem.shooterStop();
+    return new ParallelCommandGroup(
+      shooterSubsystem.shooterStop(),
+      shootFeedSubsystem.shootFeedStop()
+    );
   }
 
   // /** If intake is down, raise it. If intake is up, lower it */
@@ -140,7 +147,7 @@ public class RobotContainer {
     driver.rightTrigger().onTrue(shooterShootCommand());
     driver.rightTrigger().onFalse(shooterStopCommand());
 
-    driver.leftBumper().onTrue(intakeToggleCommand());
+    //driver.leftBumper().onTrue(intakeToggleCommand());
 
     driver.leftTrigger().whileTrue(intakeStartCommand());
     driver.leftTrigger().whileFalse(intakeStopCommand());

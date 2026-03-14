@@ -71,8 +71,15 @@ public final class Constants {
   //}
 
 /*
-CanID LIST
 
+Max Speed LIST
+Shoot Motors: 0.8
+Feed Motor: 0.8
+Index Motor: 0.6
+Intake Spin Motor: 1
+
+
+CanID LIST
 CanID 1: Drive Motor (Front Left)
 CanID 2: Turn Motor (Front Left)
 CanID 3: CANCoder (Front Left)
@@ -95,10 +102,5 @@ CanID 19: Left Shooter [coast mode]
 CanID 20: Spin [coast mode] -- Intake
 CanID 21: Intake Pivot Right [brake mode] -- Intake
 CanID 22: Intake Pivot Left [brake mode] -- Intake
-CanID 23: 
-CanID 24: 
-CanID 25:  
-
 */
-
 }

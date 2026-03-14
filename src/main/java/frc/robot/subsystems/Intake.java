@@ -113,7 +113,7 @@ public class Intake extends SubsystemBase {
     return run(
       () -> {
 
-        spinMotor.set(0.2);
+        spinMotor.set(-1.0);
       });
   }
 

@@ -31,12 +31,8 @@ public class Shooter extends SubsystemBase{
   private SparkClosedLoopController shootRightLoop;
   private SparkMaxConfig shootRightConfig;
 
-  private SparkMax indexMotor;
-  private RelativeEncoder indexEncoder;
-  private SparkClosedLoopController indexLoop;
-  private SparkMaxConfig indexConfig;
-
   public Shooter() {
+
     shootLeftMotor = new SparkMax(19, MotorType.kBrushless);
     shootLeftEncoder = shootLeftMotor.getEncoder();
     shootLeftLoop = shootLeftMotor.getClosedLoopController();
@@ -61,19 +57,6 @@ public class Shooter extends SubsystemBase{
     shootRightConfig.openLoopRampRate(0.5);
     shootRightConfig.smartCurrentLimit(40);
     shootRightMotor.configure(shootRightConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-
-    
-    indexMotor = new SparkMax(17, MotorType.kBrushless);
-    indexEncoder = indexMotor.getEncoder();
-    indexLoop = indexMotor.getClosedLoopController();
-
-    indexConfig = new SparkMaxConfig();
-    indexConfig.idleMode(IdleMode.kCoast);
-    indexConfig.closedLoop.pid(1, 0, 0);
-    indexConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    indexConfig.openLoopRampRate(0.5);
-    indexConfig.smartCurrentLimit(40);
-    indexMotor.configure(indexConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 
   /** Starts both shooters spinning in shoot direction @return this command */
@@ -82,8 +65,8 @@ public class Shooter extends SubsystemBase{
       () -> {
 
         // Set these to the same speed
-        shootLeftMotor.set(0.2);
-        shootRightMotor.set(0.2);
+        shootLeftMotor.set(0.8);
+        shootRightMotor.set(-0.8);
       });
   }
 
@@ -95,35 +78,6 @@ public class Shooter extends SubsystemBase{
         // Set these to the same speed
         shootLeftMotor.set(0);
         shootRightMotor.set(0);
-
-        indexStop(); // Needed to be called here to avoid a "multiple thread exception" in robot container
-      });
-  }
-
-  /** Starts the feed motor @return this command */
-  public Command indexStart() {
-    return run(
-      () -> {
-
-        indexMotor.set(0.2);
-      });
-  }
-
-  /** Use to reverse indexer and unclog jams potentially? @return this command */
-  public Command indexReverse() {
-    return run(
-      () -> {
-
-        indexMotor.set(-0.2);
-      });
-  }
-
-  /** Stops the index motor @return this command */
-  public Command indexStop() {
-    return run(
-      () -> {
-
-        indexMotor.set(0);
       });
   }
 
