@@ -92,7 +92,11 @@ public class ShootFeed extends SubsystemBase{
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("feedMotor", feedEncoder.getVelocity());
-    SmartDashboard.putNumber("indexMotor", indexEncoder.getVelocity());
+    SmartDashboard.putNumber("Feed Motor Speed", feedEncoder.getVelocity());
+    SmartDashboard.putNumber("Feed Motor Position", feedEncoder.getPosition());
+
+    SmartDashboard.putNumber("Index Motor Speed", indexEncoder.getVelocity());
+    SmartDashboard.putNumber("Feed Motor Position", indexEncoder.getPosition());
+
   }
 }

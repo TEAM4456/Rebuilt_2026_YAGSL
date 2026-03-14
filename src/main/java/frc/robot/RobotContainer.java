@@ -83,7 +83,7 @@ public class RobotContainer {
       shooterSubsystem.shooterShoot(),
       new SequentialCommandGroup(
         
-        new WaitCommand(1.0),
+        new WaitCommand(3.0),
         shootFeedSubsystem.shootFeedStart()
       )
     );
