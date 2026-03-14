@@ -80,7 +80,7 @@ public class RobotContainer {
 
       shooterSubsystem.shooterShoot(),
       new WaitCommand(1.0),
-      shooterSubsystem.feedStart()
+      shooterSubsystem.indexStart()
     );
   }
 
@@ -89,7 +89,7 @@ public class RobotContainer {
     return new ParallelCommandGroup(
 
       shooterSubsystem.shooterStop(),
-      shooterSubsystem.feedStop()
+      shooterSubsystem.indexStop()
     );
   }
 

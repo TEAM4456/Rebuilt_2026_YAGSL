@@ -9,8 +9,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -37,17 +41,41 @@ public class Intake extends SubsystemBase {
     intakePivotRightMotor = new SparkMax(21, MotorType.kBrushless);
     intakePivotRightEncoder = intakePivotRightMotor.getEncoder();
     intakePivotRightLoop = intakePivotRightMotor.getClosedLoopController();
+
     intakePivotRightConfig = new SparkMaxConfig();
+    intakePivotRightConfig.idleMode(IdleMode.kBrake);
+    intakePivotRightConfig.closedLoop.pid(1, 0, 0);
+    intakePivotRightConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    intakePivotRightConfig.openLoopRampRate(0.5);
+    intakePivotRightConfig.smartCurrentLimit(40);
+    intakePivotRightMotor.configure(intakePivotRightConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+
 
     intakePivotLeftMotor = new SparkMax(22, MotorType.kBrushless);
     intakePivotLeftEncoder = intakePivotLeftMotor.getEncoder();
     intakePivotLeftLoop = intakePivotLeftMotor.getClosedLoopController();
+
     intakePivotLeftConfig = new SparkMaxConfig();
+    intakePivotLeftConfig.idleMode(IdleMode.kBrake);
+    intakePivotLeftConfig.closedLoop.pid(1, 0, 0);
+    intakePivotLeftConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    intakePivotLeftConfig.openLoopRampRate(0.5);
+    intakePivotLeftConfig.smartCurrentLimit(40);
+    intakePivotLeftMotor.configure(intakePivotLeftConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+
 
     spinMotor = new SparkMax(20, MotorType.kBrushless);
     spinEncoder = spinMotor.getEncoder();
     spinLoop = spinMotor.getClosedLoopController();
+
     spinConfig = new SparkMaxConfig();
+    spinConfig.idleMode(IdleMode.kCoast);
+    spinConfig.closedLoop.pid(1, 0, 0);
+    spinConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    spinConfig.openLoopRampRate(0.5);
+    spinConfig.smartCurrentLimit(40);
+    spinMotor.configure(spinConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+  
   }
 
   // Manual controls
@@ -106,10 +134,4 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("intakePivotRightMotor", intakePivotRightEncoder.getPosition());
     SmartDashboard.putNumber("intakePivotLeftMotor", intakePivotLeftEncoder.getPosition());
   }
-  /*
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
-  */
 }
