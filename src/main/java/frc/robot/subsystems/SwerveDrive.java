@@ -30,7 +30,6 @@ public class SwerveDrive extends SubsystemBase
 
     // Attributes
     SwerveDriveKinematics kinematics;
-    SwerveDriveOdometry odometry;
     AHRS gyro; // Psuedo-class representing a gyroscope.
     SwerveModule[] swerveModules; // Psuedo-class representing swerve modules.
     public Field2d field;
@@ -60,15 +59,6 @@ public class SwerveDrive extends SubsystemBase
         );
         
         gyro = new AHRS(NavXComType.kMXP_SPI); // Psuedo-constructor for generating gyroscope.
-
-        // Create the SwerveDriveOdometry given the current angle, the robot is at x=0, r=0, and heading=0
-        odometry = new SwerveDriveOdometry(
-            kinematics,
-            Rotation2d.fromDegrees(gyro.getAngle()), // returns current gyro reading as a Rotation2d
-            new SwerveModulePosition[]{new SwerveModulePosition(), new SwerveModulePosition(), new SwerveModulePosition(), new SwerveModulePosition()},
-            // Front-Left, Front-Right, Back-Left, Back-Right
-            new Pose2d(0,0,new Rotation2d()) // x=0, y=0, heading=0
-        );
         
         field = new Field2d();
 
@@ -95,7 +85,7 @@ public class SwerveDrive extends SubsystemBase
         // Passing values seperated by commas
         AutoBuilder.configure(
             this::getPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::resetPose, // Method to reset pose (will be called if your auto has a starting pose)
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
@@ -142,7 +132,7 @@ public class SwerveDrive extends SubsystemBase
         return poseEstimator.getEstimatedPosition();
      }
     public void resetPose(Pose2d pose) {
-        odometry.resetPosition(getRotation2d(), getModulePositions(), pose);
+        poseEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
     public ChassisSpeeds getRobotRelativeSpeeds() {
@@ -188,8 +178,8 @@ public class SwerveDrive extends SubsystemBase
         // boolean useMegaTag2 = true; //set to false to use MegaTag1
         boolean doRejectUpdate = false;
         
-        LimelightHelpers.SetRobotOrientation("limelight", poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0); // Figure this method out
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+        LimelightHelpers.SetRobotOrientation("limelight-sjc", poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0); // Figure this method out
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-sjc");
         if(Math.abs(gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
         {
             doRejectUpdate = true;
@@ -208,6 +198,7 @@ public class SwerveDrive extends SubsystemBase
     }
 
     //TODO This is an experimental code to center the robot at the right position for shooting, currently just default
+    /*
     public void onTheFlyTest() {
         // Create a list of waypoints from poses. Each pose represents one waypoint.
         // The rotation component of the pose should be the direction of travel. Do not use holonomic rotation.
@@ -231,13 +222,19 @@ public class SwerveDrive extends SubsystemBase
         // Prevent the path from being flipped if the coordinates are already correct
         path.preventFlipping = true;
     }
+    */
     
     @Override
-    public void periodic()
+    public void periodic() 
     {
-        // Update the odometry every run.
-        odometry.update(Rotation2d.fromDegrees(gyro.getAngle()),  getModulePositions());
+
+        // Update the pose every run.
+        poseEstimator.update(Rotation2d.fromDegrees(gyro.getAngle()),  getModulePositions());
+
         SmartDashboard.putData("Field", field);
+        SmartDashboard.putNumber("poseX", getPose().getX());
+        SmartDashboard.putNumber("poseY", getPose().getY());
+
         field.setRobotPose(getPose());
     }
     

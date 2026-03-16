@@ -45,7 +45,7 @@ public class Intake extends SubsystemBase {
 
     intakePivotRightConfig = new SparkMaxConfig();
     intakePivotRightConfig.idleMode(IdleMode.kBrake);
-    intakePivotRightConfig.closedLoop.pid(0.01, 0, 0);
+    intakePivotRightConfig.closedLoop.pid(0.05, 0, 0);
     intakePivotRightConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     intakePivotRightConfig.openLoopRampRate(0.5);
     intakePivotRightConfig.smartCurrentLimit(40);
@@ -58,7 +58,7 @@ public class Intake extends SubsystemBase {
 
     intakePivotLeftConfig = new SparkMaxConfig();
     intakePivotLeftConfig.idleMode(IdleMode.kBrake);
-    intakePivotLeftConfig.closedLoop.pid(0.01, 0, 0);
+    intakePivotLeftConfig.closedLoop.pid(0.05, 0, 0);
     intakePivotLeftConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     intakePivotLeftConfig.openLoopRampRate(0.5);
     intakePivotLeftConfig.smartCurrentLimit(40);
@@ -81,15 +81,15 @@ public class Intake extends SubsystemBase {
 
   // Manual controls
 
-  /** Raises intake mechanism off the field @return this command */
+  /** Raises intake mechanism off the field to its starting position from a power cycle @return this command */
   public Command intakePivotTurnUp() {
     return run(
       () -> {
-        
-        intakePivotRightMotor.set(0.2);
-        intakePivotLeftMotor.set(0.2);
-
         isDown = false;
+        intakePivotRightLoop.setSetpoint(0, ControlType.kPosition);
+        intakePivotLeftLoop.setSetpoint(0, ControlType.kPosition);
+
+        
       });
   }
 

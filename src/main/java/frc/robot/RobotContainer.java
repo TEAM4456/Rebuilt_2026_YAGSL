@@ -106,6 +106,14 @@ public class RobotContainer {
       return intakeSubsystem.intakePivotTurnDown();
   }
 
+  public Command intakeUpCommand() {
+    return intakeSubsystem.intakePivotTurnUp();
+  }
+
+  public Command intakeDownCommand() {
+    return intakeSubsystem.intakePivotTurnDown();
+  }
+
   // /** Start intake feed motor */
   public Command intakeStartCommand() {
 
@@ -118,6 +126,7 @@ public class RobotContainer {
     return intakeSubsystem.spinStop();
   }
 
+  //TODO Remove this setpoint
   public Command testSetpointCommand() {
 
     return intakeSubsystem.spinTestSetPosition();
@@ -148,13 +157,14 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
 
-    driver.a().onTrue(testSetpointCommand());
-
     // Maybe use whileTrue(), idk?
     driver.rightTrigger().onTrue(shooterShootCommand());
     driver.rightTrigger().onFalse(shooterStopCommand());
 
     driver.leftBumper().onTrue(intakeToggleCommand());
+
+    driver.a().onTrue(intakeDownCommand());
+    driver.b().onTrue(intakeUpCommand());
 
     driver.leftTrigger().whileTrue(intakeStartCommand());
     driver.leftTrigger().whileFalse(intakeStopCommand());
