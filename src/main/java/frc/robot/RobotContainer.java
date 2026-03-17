@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 /* Most commands will be imported later when we deem them necessary...
   import frc.robot.commands.Autos;
   import frc.robot.commands.ExampleCommand;
@@ -70,10 +71,11 @@ public class RobotContainer {
 
 
     chooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("auto", chooser);
     
     // Configure the trigger bindings
     configureBindings();
+    
+    SmartDashboard.putData("auto", chooser);
   }
 
   // /** Starts the shooter, waits 1 second, then starts the feeder. Execute only OnTrue */
@@ -155,8 +157,13 @@ public class RobotContainer {
   // =======================================================================
 
   public Command TestAutoAutoCommand() {
-    
-    return new PathPlannerAuto("Test Auto");
+
+    return new SequentialCommandGroup(
+
+      new PathPlannerAuto("Test Auto"),
+      intakeStartCommand().withTimeout(3),
+      intakeStopCommand()
+    );
   }
   
   
@@ -164,7 +171,7 @@ public class RobotContainer {
 
     chooser.setDefaultOption("nothing", null);
 
-    chooser.addOption("A autonomous routine to test the auto functionality", TestAutoAutoCommand());
+    chooser.addOption("Test Auto", TestAutoAutoCommand());
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

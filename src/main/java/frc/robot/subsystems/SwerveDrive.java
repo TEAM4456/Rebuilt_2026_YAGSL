@@ -58,7 +58,9 @@ public class SwerveDrive extends SubsystemBase
             new Translation2d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-10.5))  // Back Right
         );
         
-        gyro = new AHRS(NavXComType.kMXP_SPI); // Psuedo-constructor for generating gyroscope.
+        gyro = new AHRS(NavXComType.kMXP_SPI);
+        
+        //gyro.reset();
         
         field = new Field2d();
 
@@ -125,12 +127,25 @@ public class SwerveDrive extends SubsystemBase
     }
 
     public Rotation2d getRotation2d() {
-        return gyro.getRotation2d();
+        return Rotation2d.fromDegrees(Math.IEEEremainder(-gyro.getAngle(), 360));
     }
 
+    //TODO Jank code written by Liam that may or may not work
     public Pose2d getPose() {
-        return poseEstimator.getEstimatedPosition();
-     }
+        Pose2d currentPose = poseEstimator.getEstimatedPosition();
+
+        Pose2d alteredPose;
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+
+            alteredPose = new Pose2d(-currentPose.getX(), -currentPose.getY(), currentPose.getRotation());
+        }
+        else {
+            alteredPose = currentPose;
+        }
+
+        return alteredPose;
+    }
+
     public void resetPose(Pose2d pose) {
         poseEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
@@ -138,32 +153,35 @@ public class SwerveDrive extends SubsystemBase
     public ChassisSpeeds getRobotRelativeSpeeds() {
         ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(getStates());
         return chassisSpeeds;
-     }
+    }
+
     public void driveRobotRelative(ChassisSpeeds speeds) {
         ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
 
         SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
         setStates(targetStates);
-     }
+    }
+    
     public void setStates(SwerveModuleState[] targetStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, Constants.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, Constants.maxSpeed);
 
-    for (SwerveModule mod : swerveModules) {
-      mod.setDesiredState(targetStates[mod.moduleNumber]);
+        for (SwerveModule mod : swerveModules) {
+            mod.setDesiredState(targetStates[mod.moduleNumber]);
+        }
     }
-  }
 
-  public SwerveModuleState[] getStates() {
-    SwerveModuleState[] states = new SwerveModuleState[4];
-    for (SwerveModule mod : swerveModules) {
-      states[mod.moduleNumber] = mod.getState();
+    public SwerveModuleState[] getStates() {
+        SwerveModuleState[] states = new SwerveModuleState[4];
+        for (SwerveModule mod : swerveModules) {
+            states[mod.moduleNumber] = mod.getState();
+        }
+        return states;
     }
-    return states;
-  }
+
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for (SwerveModule mod : swerveModules) {
-        positions[mod.moduleNumber] = mod.getPosition();
+            positions[mod.moduleNumber] = mod.getPosition();
         }
         return positions;
     }
@@ -231,11 +249,12 @@ public class SwerveDrive extends SubsystemBase
         // Update the pose every run.
         //poseEstimator.update(Rotation2d.fromDegrees(gyro.getAngle()),  getModulePositions());
 
+        field.setRobotPose(getPose());
+
         SmartDashboard.putData("Field", field);
         SmartDashboard.putNumber("poseX", getPose().getX());
         SmartDashboard.putNumber("poseY", getPose().getY());
-
-        field.setRobotPose(getPose());
+        SmartDashboard.putNumber("Heading", getRotation2d().getDegrees());
     }
     
 }
