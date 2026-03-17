@@ -77,13 +77,25 @@ public class RobotContainer {
   }
 
   // /** Starts the shooter, waits 1 second, then starts the feeder. Execute only OnTrue */
-  public Command shooterShootCommand() {
+  public Command shooterShootTrenchCommand() {
     return new ParallelCommandGroup(
 
-      shooterSubsystem.shooterShoot(),
+      shooterSubsystem.shooterShootTrench(),
       new SequentialCommandGroup(
         
-        new WaitCommand(3.0),
+        new WaitCommand(2.0),
+        shootFeedSubsystem.shootFeedStart()
+      )
+    );
+  }
+
+  public Command shooterShootUpAgainstHubCommand() {
+    return new ParallelCommandGroup(
+
+      shooterSubsystem.shooterShootAgainstHub(),
+      new SequentialCommandGroup(
+        
+        new WaitCommand(2.0),
         shootFeedSubsystem.shootFeedStart()
       )
     );
@@ -158,8 +170,11 @@ public class RobotContainer {
     // cancelling on release.
 
     // Maybe use whileTrue(), idk?
-    driver.rightTrigger().onTrue(shooterShootCommand());
-    driver.rightTrigger().onFalse(shooterStopCommand());
+    driver.rightTrigger().whileTrue(shooterShootTrenchCommand());
+    driver.rightTrigger().whileFalse(shooterStopCommand());
+
+    driver.rightBumper().whileTrue(shooterShootUpAgainstHubCommand());
+    driver.rightBumper().whileFalse(shooterStopCommand());
 
     driver.leftBumper().onTrue(intakeToggleCommand());
 

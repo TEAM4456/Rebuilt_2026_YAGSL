@@ -43,7 +43,7 @@ public class Shooter extends SubsystemBase{
     shootLeftConfig = new SparkMaxConfig();
     shootLeftConfig.idleMode(IdleMode.kCoast);
     shootLeftConfig.closedLoop
-    .p(0.0001, ClosedLoopSlot.kSlot1)
+    .p(0.003, ClosedLoopSlot.kSlot1)
     .i(0, ClosedLoopSlot.kSlot1)
     .d(0, ClosedLoopSlot.kSlot1)
     .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
@@ -51,9 +51,18 @@ public class Shooter extends SubsystemBase{
     // kV is now in Volts, so we multiply by the nominal voltage (12V)
     .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
 
+    shootLeftConfig.closedLoop
+    .p(0.0005, ClosedLoopSlot.kSlot2)
+    .i(0, ClosedLoopSlot.kSlot2)
+    .d(0, ClosedLoopSlot.kSlot2)
+    .outputRange(-1, 1, ClosedLoopSlot.kSlot2)
+    .feedForward
+    // kV is now in Volts, so we multiply by the nominal voltage (12V)
+    .kV(12.0 / 5767, ClosedLoopSlot.kSlot2);
+
     shootLeftConfig.closedLoop.maxMotion.
-      cruiseVelocity(1000).
-      maxAcceleration(50).
+      cruiseVelocity(4600).
+      maxAcceleration(5000).
       allowedProfileError(1);
     shootLeftConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     shootLeftConfig.openLoopRampRate(0.5);
@@ -69,7 +78,7 @@ public class Shooter extends SubsystemBase{
     shootRightConfig.idleMode(IdleMode.kCoast);
 
     shootRightConfig.closedLoop
-      .p(0.0001, ClosedLoopSlot.kSlot1)
+      .p(0.003, ClosedLoopSlot.kSlot1)
       .i(0, ClosedLoopSlot.kSlot1)
       .d(0, ClosedLoopSlot.kSlot1)
       .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
@@ -77,9 +86,18 @@ public class Shooter extends SubsystemBase{
       // kV is now in Volts, so we multiply by the nominal voltage (12V)
       .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
 
+      shootRightConfig.closedLoop
+      .p(0.0005, ClosedLoopSlot.kSlot2)
+      .i(0, ClosedLoopSlot.kSlot2)
+      .d(0, ClosedLoopSlot.kSlot2)
+      .outputRange(-1, 1, ClosedLoopSlot.kSlot2)
+      .feedForward
+      // kV is now in Volts, so we multiply by the nominal voltage (12V)
+      .kV(12.0 / 5767, ClosedLoopSlot.kSlot2);
+
     shootRightConfig.closedLoop.maxMotion.
-      cruiseVelocity(1000).
-      maxAcceleration(50).
+      cruiseVelocity(4800).
+      maxAcceleration(5000).
       allowedProfileError(1);
     shootRightConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     shootRightConfig.openLoopRampRate(0.5);
@@ -88,13 +106,23 @@ public class Shooter extends SubsystemBase{
   }
 
   /** Starts both shooters spinning in shoot direction @return this command */
-  public Command shooterShoot() {
+  public Command shooterShootTrench() {
     return run(
       () -> {
 
         // Set these to the same speed
-        shootLeftLoop.setSetpoint(4400, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
-        shootRightLoop.setSetpoint(-4400, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        shootLeftLoop.setSetpoint(4500, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        shootRightLoop.setSetpoint(-4700, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+      });
+  }
+
+   public Command shooterShootAgainstHub() {
+    return run(
+      () -> {
+
+        // Set these to the same speed
+        shootLeftLoop.setSetpoint(3000, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
+        shootRightLoop.setSetpoint(-3000, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
       });
   }
 

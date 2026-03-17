@@ -64,7 +64,7 @@ public class ShootFeed extends SubsystemBase{
     return run(
       () -> {
 
-        feedMotor.set(0.8);
+        feedMotor.set(0.6);
         indexMotor.set(-0.6);
       });
   }

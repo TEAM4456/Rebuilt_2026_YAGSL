@@ -229,7 +229,7 @@ public class SwerveDrive extends SubsystemBase
     {
 
         // Update the pose every run.
-        poseEstimator.update(Rotation2d.fromDegrees(gyro.getAngle()),  getModulePositions());
+        //poseEstimator.update(Rotation2d.fromDegrees(gyro.getAngle()),  getModulePositions());
 
         SmartDashboard.putData("Field", field);
         SmartDashboard.putNumber("poseX", getPose().getX());
