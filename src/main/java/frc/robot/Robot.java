@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+  private RobotContainer m_robotContainer;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    if (!RobotContainer.isInitialized())
+    if (!RobotContainer.checkInitialized())
       return;
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if (!RobotContainer.isInitialized())
+    if (!RobotContainer.checkInitialized())
       return;
     m_robotContainer.updateOdometry();
   }
@@ -112,7 +112,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if (!RobotContainer.isInitialized())
+    if (!RobotContainer.checkInitialized())
       return;
     m_robotContainer.updateOdometry();
   }
