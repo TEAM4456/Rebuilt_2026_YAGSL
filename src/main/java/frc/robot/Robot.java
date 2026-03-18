@@ -8,6 +8,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -25,8 +26,10 @@ public class Robot extends TimedRobot {
    */
   public Robot() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    //  autonomous chooser on the dashboard.
+    // 
+    // For reasons, we need to initialize RobotContainer only after the DriverStation is
+    //  connected. See robotPeriodic().
   }
 
   /**
@@ -43,7 +46,29 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    
+    // Wait to initialize RobotContainer until after we've connected to the DriverStation.
+    if (!RobotContainer.checkInitialized() && DriverStation.isDSAttached()) {
+      m_robotContainer = RobotContainer.getInstance();
+      callModeInit();
+    }
   }
+
+  private void callModeInit() {
+    // If DS is already enabled when we create the container, make sure the correct
+    //  mode init ran (auto/teleop). Normally the framework calls these on mode transitions
+    //  (that could have happened before we existed).
+    if (DriverStation.isAutonomousEnabled()) {
+      autonomousInit();
+    } else if (DriverStation.isTeleopEnabled()) {
+      teleopInit();
+    } else if (DriverStation.isTestEnabled()) {
+      testInit();
+    } else if (DriverStation.isDisabled()) {
+      disabledInit();
+    }
+  }
+
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
@@ -53,10 +78,10 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
-  
-  
   @Override
   public void autonomousInit() {
+    if (!RobotContainer.isInitialized())
+      return;
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -68,6 +93,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    if (!RobotContainer.isInitialized())
+      return;
     m_robotContainer.updateOdometry();
   }
 
@@ -85,6 +112,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    if (!RobotContainer.isInitialized())
+      return;
     m_robotContainer.updateOdometry();
   }
 

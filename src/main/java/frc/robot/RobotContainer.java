@@ -37,8 +37,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
+ * 
+ * This class is designed as a singleton. Google that term or read below for more info.
  */
 public class RobotContainer {
+
+  private static boolean isInitialized = false;
 
   private final CommandXboxController driver = new CommandXboxController(0);
   private final CommandXboxController second = new CommandXboxController(1);
@@ -60,8 +64,16 @@ public class RobotContainer {
 
   private final SendableChooser<Command> chooser;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  /**
+   * Creates the container for the robot. Contains subsystems, OI devices, and commands.
+   * 
+   *  This constructor is private -- use getInstance() instead. 
+   */
+  private RobotContainer() {
+    if (isInitialized) {
+      throw new IllegalStateException("RobotContainer cannot be initialized more than once!");
+    }
+    
     // If we are red alliance, then the default Field view is good. Otherwise, we need
     //  to invert the translation and strafe axes, as well as the drive motors in SwerveDrive
     boolean isRed = swerve.allianceIsRed();
@@ -83,6 +95,54 @@ public class RobotContainer {
     configureBindings();
     
     SmartDashboard.putData("auto", chooser);
+
+    isInitialized = true;
+    // Now... never initialize ever again!
+  }
+
+  /**
+   * Does what it says on the tin -- holds "the instance"
+   * 
+   * "But why put this inside a dumb one-line class?" you ask. Since Java uses something
+   *  called lazy initialization to set up static classes (or static anythings), a new
+   *  RobotContainer will not be constructed until getInstance() is called. This allows
+   *  us to wait until after the DriverStation has been initialized to create our
+   *  RobotContainer. As a side effect, this guarantees that only 1 RobotContainer is
+   *  allowed to exist at any given time. This is known as the "singleton" design pattern.
+   *  
+   *  If you understand the above, congratulations! You are ready for CS in college.
+   */
+  private static class Holder {
+    private static final RobotContainer INSTANCE = new RobotContainer();
+  }
+
+  /**
+   * Get the RobotContainer. Don't call this method until after the DriverStation
+   *  has been initialized.
+   * 
+   * @return the man, the myth, the RobotContainer
+   */
+  public static RobotContainer getInstance() {
+    return Holder.INSTANCE;
+  }
+
+  /**
+   * Protects against object serialization creating a 2nd instance through a loophole.
+   *  Curious minds can have an AI explain what that means. Otherwise, this should just
+   *  be left here as-is!
+   */
+  private Object readResolve() {
+    return getInstance(); 
+  }
+
+
+  /**
+   * Check whether the instance has been created yet.
+   * 
+   * @return true if the RobotContainer has been initialized, false otherwise
+   */
+  public static boolean checkInitialized() {
+    return isInitialized;
   }
 
   /** Starts the shooter for Trench shot */

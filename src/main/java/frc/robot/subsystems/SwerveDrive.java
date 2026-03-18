@@ -39,12 +39,7 @@ public class SwerveDrive extends SubsystemBase
 
     // Field Initializer runs before constructor. Use only for basic stuff... like initializing fields.
     {
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-            isRed = alliance.get() == DriverStation.Alliance.Red;
-        } else {
-            isRed = false;
-        }
+
     }
 
     // Constructor
@@ -162,7 +157,12 @@ public class SwerveDrive extends SubsystemBase
      * @return true if Red, false otherwise
      */
     public boolean allianceIsRed() {
-        return isRed;
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+        } else {
+            return false;
+        }
     }
 
     public void driveRobotRelative(ChassisSpeeds speeds) {
