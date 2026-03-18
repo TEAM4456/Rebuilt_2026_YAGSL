@@ -37,19 +37,17 @@ public class SwerveDrive extends SubsystemBase
     SwerveDrivePoseEstimator poseEstimator;
     public RobotConfig config;
 
-    // Field Initializer runs before constructor. Use only for basic stuff... like initializing fields.
-    {
-
-    }
-
     // Constructor
     public SwerveDrive() {
+        
+        isRed = allianceIsRed();
+
         swerveModules = new SwerveModule[4]; // Create swerve modules here.
 
-        swerveModules[0] = new SwerveModule(1, 2, 3, !isRed, 0); // Front left
-        swerveModules[1] = new SwerveModule(4, 5, 6, !isRed, 1); // Front right
-        swerveModules[2] = new SwerveModule(10, 11, 12, !isRed, 2); // Back left
-        swerveModules[3] = new SwerveModule(7, 8, 9, !isRed, 3); // Back right
+        swerveModules[0] = new SwerveModule(1, 2, 3, true, 0); // Front left
+        swerveModules[1] = new SwerveModule(4, 5, 6, true, 1); // Front right
+        swerveModules[2] = new SwerveModule(10, 11, 12, true, 2); // Back left
+        swerveModules[3] = new SwerveModule(7, 8, 9, true, 3); // Back right
         
         // Create SwerveDriveKinematics object
         // 10.5in from center of robot to center of wheel.
@@ -200,7 +198,7 @@ public class SwerveDrive extends SubsystemBase
     // This is passed into RobotContainer, then into Robot to be called periodically during Autonomous operations
     public void updateOdometry() {
         poseEstimator.update(
-        gyro.getRotation2d(),
+        getRotation2d(),
         getModulePositions());
 
         // boolean useMegaTag2 = true; //set to false to use MegaTag1
