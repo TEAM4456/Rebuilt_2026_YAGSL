@@ -4,6 +4,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -19,6 +20,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+
+import java.util.Optional;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.config.PIDConstants;
@@ -95,21 +99,21 @@ public class SwerveDrive extends SubsystemBase
                     new PIDConstants(Constants.pTurnMotor, Constants.iTurnMotor,Constants.dTurnMotor) // Rotation PID constants
             ),
             config, // The robot configuration
-            () -> {
-                // Boolean supplier that controls when the path will be mirrored for the red alliance
-                // This will flip the path being followed to the red side of the field.
-                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                var alliance = DriverStation.getAlliance();
-                if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-                }
-                return false;
-            },
+            this::isRedAlliance,
             this // Reference to this subsystem to set requirements
             );
         
     }
+
+    public boolean isRedAlliance() {
+		Optional<Alliance> alliance = DriverStation.getAlliance();
+		if (alliance.isPresent()) {
+			return alliance.get() == Alliance.Red;
+
+		} else {
+			return false;
+		}
+	}
     
     public void drive(Translation2d translation, double rotation) {
         
@@ -134,16 +138,16 @@ public class SwerveDrive extends SubsystemBase
     public Pose2d getPose() {
         Pose2d currentPose = poseEstimator.getEstimatedPosition();
 
-        Pose2d alteredPose;
-        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+        // Pose2d alteredPose;
+        // if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
 
-            alteredPose = new Pose2d(currentPose.getX(), currentPose.getY(), currentPose.getRotation());
-        }
-        else {
-            alteredPose = currentPose;
-        }
+        //     alteredPose = new Pose2d(currentPose.getX(), currentPose.getY(), currentPose.getRotation());
+        // }
+        // else {
+        //     alteredPose = currentPose;
+        // }
 
-        return alteredPose;
+        return currentPose;
     }
 
     public void resetPose(Pose2d pose) {
@@ -255,6 +259,7 @@ public class SwerveDrive extends SubsystemBase
         SmartDashboard.putNumber("poseX", getPose().getX());
         SmartDashboard.putNumber("poseY", getPose().getY());
         SmartDashboard.putNumber("Heading", getRotation2d().getDegrees());
+        SmartDashboard.putBoolean("Alliance.get()", isRedAlliance());
     }
     
 }
