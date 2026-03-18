@@ -65,8 +65,8 @@ public class RobotContainer {
     swerve.setDefaultCommand(
         new TeleopSwerve(
             swerve,
-            () -> driver.getRawAxis(translationAxis), // Used to have negatives in front
-            () -> driver.getRawAxis(strafeAxis), // This too
+            () -> -driver.getRawAxis(translationAxis), // Used to have negatives in front
+            () -> -driver.getRawAxis(strafeAxis), // This too
             () -> driver.getRawAxis(rotationAxis)/2));
 
     shooterSubsystem.setDefaultCommand(shooterStopCommand());
