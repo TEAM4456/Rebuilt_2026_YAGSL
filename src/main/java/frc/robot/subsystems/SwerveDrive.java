@@ -68,6 +68,9 @@ public class SwerveDrive extends SubsystemBase
         );
         
         gyro = new AHRS(NavXComType.kMXP_SPI);
+        if(isRed) {
+            gyro.setAngleAdjustment(180);
+        }
         
         //gyro.reset();
         
