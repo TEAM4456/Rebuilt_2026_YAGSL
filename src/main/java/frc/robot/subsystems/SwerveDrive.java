@@ -137,7 +137,7 @@ public class SwerveDrive extends SubsystemBase
         Pose2d alteredPose;
         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
 
-            alteredPose = new Pose2d(-currentPose.getX(), -currentPose.getY(), currentPose.getRotation());
+            alteredPose = new Pose2d(currentPose.getX(), currentPose.getY(), currentPose.getRotation());
         }
         else {
             alteredPose = currentPose;

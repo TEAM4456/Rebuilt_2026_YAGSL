@@ -69,6 +69,9 @@ public class RobotContainer {
             () -> driver.getRawAxis(strafeAxis), // This too
             () -> driver.getRawAxis(rotationAxis)/2));
 
+    shooterSubsystem.setDefaultCommand(shooterStopCommand());
+    intakeSubsystem.setDefaultCommand(intakeStopCommand());
+
 
     chooser = AutoBuilder.buildAutoChooser();
     
@@ -78,37 +81,34 @@ public class RobotContainer {
     SmartDashboard.putData("auto", chooser);
   }
 
-  // /** Starts the shooter, waits 1 second, then starts the feeder. Execute only OnTrue */
+  /** Starts the shooter for Trench shot */
   public Command shooterShootTrenchCommand() {
-    return new ParallelCommandGroup(
-
-      shooterSubsystem.shooterShootTrench(),
-      new SequentialCommandGroup(
-        
-        new WaitCommand(2.0),
-        shootFeedSubsystem.shootFeedStart()
-      )
-    );
+    return shooterSubsystem.shooterShootTrench();
   }
 
+  /** Starts the shooter for close shot up against Hub */
   public Command shooterShootUpAgainstHubCommand() {
-    return new ParallelCommandGroup(
-
-      shooterSubsystem.shooterShootAgainstHub(),
-      new SequentialCommandGroup(
-        
-        new WaitCommand(2.0),
-        shootFeedSubsystem.shootFeedStart()
-      )
-    );
+    return shooterSubsystem.shooterShootAgainstHub();
   }
 
-  // /** Stops the shooter and feeder simultaniously */
+  /** Starts the feeder motors (feed and indexer) */
+  public Command ShootFeedCommand() {
+    return shootFeedSubsystem.shootFeedStart();
+  }
+
+   /** Reverses the feeder motors (feed and indexer) */
+  public Command ShootFeedReverseCommand() {
+    return shootFeedSubsystem.shootFeedReverse();
+  }
+
+  // /** Stops the shooter */
   public Command shooterStopCommand() {
-    return new ParallelCommandGroup(
-      shooterSubsystem.shooterStop(),
-      shootFeedSubsystem.shootFeedStop()
-    );
+    return shooterSubsystem.shooterStop();
+  }
+
+  /* Stops the feeder */
+   public Command feederStopCommand() {
+    return shootFeedSubsystem.shootFeedStop();
   }
 
   // /** If intake is down, raise it. If intake is up, lower it */
@@ -134,6 +134,12 @@ public class RobotContainer {
     return intakeSubsystem.spinStart();
   }
 
+  // /** Reverses intake feed motor */
+  public Command intakeReverseCommand() {
+
+    return intakeSubsystem.spinReverse();
+  }
+
   // /** Stop intake feed motor */
   public Command intakeStopCommand() {
 
@@ -146,6 +152,9 @@ public class RobotContainer {
     return intakeSubsystem.spinTestSetPosition();
   }
 
+  public Command autoAlignShootBlueLeftCommand(){
+    return new PathPlannerAuto("Auto Align Trench Shot on Blue Left");
+  }
 
   // Calls the SwerveDrive "updateOdometry" method. Then this method is called in "Robot.java" for actual use. This is therefore a bridge method
   public void updateOdometry() {
@@ -177,19 +186,26 @@ public class RobotContainer {
     // cancelling on release.
 
     // Maybe use whileTrue(), idk?
-    driver.rightTrigger().whileTrue(shooterShootTrenchCommand());
-    driver.rightTrigger().whileFalse(shooterStopCommand());
+    driver.rightTrigger().toggleOnTrue(shooterShootTrenchCommand());
 
-    driver.rightBumper().whileTrue(shooterShootUpAgainstHubCommand());
-    driver.rightBumper().whileFalse(shooterStopCommand());
+    driver.rightBumper().toggleOnTrue(shooterShootUpAgainstHubCommand());
+    
 
-    driver.leftBumper().onTrue(intakeToggleCommand());
+    driver.leftTrigger().whileTrue(ShootFeedCommand());
+    driver.leftTrigger().whileFalse(feederStopCommand());
+
+    driver.leftBumper().whileTrue(ShootFeedReverseCommand());
+    driver.leftBumper().whileFalse(feederStopCommand());
+
+    //driver.leftBumper().onTrue(intakeToggleCommand());
 
     driver.a().onTrue(intakeDownCommand());
-    driver.b().onTrue(intakeUpCommand());
+    driver.y().onTrue(intakeUpCommand());
 
-    driver.leftTrigger().whileTrue(intakeStartCommand());
-    driver.leftTrigger().whileFalse(intakeStopCommand());
+    driver.b().toggleOnTrue(intakeStartCommand());
+    driver.x().whileTrue(intakeReverseCommand());
+    //driver.back().whileTrue(autoAlignShootBlueLeftCommand());
+    
   }
   
   // Look into this later

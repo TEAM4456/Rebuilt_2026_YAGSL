@@ -118,6 +118,15 @@ public class Intake extends SubsystemBase {
       });
   }
 
+   /** Accelerates intake spin motor to its max speed in reverse direction*/
+  public Command spinReverse() { //TODO: Determine intake speeds
+    return run(
+      () -> {
+
+        spinMotor.set(1.0);
+      });
+  }
+
   /** Stops the spin motor @return this command */
   public Command spinStop() {
     return run(
