@@ -62,12 +62,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // If we are red alliance, then the default Field view is good. Otherwise, we need
+    //  to invert the translation and strafe axes, as well as the drive motors in SwerveDrive
+    boolean isRed = swerve.allianceIsRed();
+    int invertAxes = isRed ? 1 : -1;
     swerve.setDefaultCommand(
         new TeleopSwerve(
             swerve,
-            () -> driver.getRawAxis(translationAxis), // Used to have negatives in front
-            () -> driver.getRawAxis(strafeAxis), // This too
-            () -> driver.getRawAxis(rotationAxis)/2));
+            () -> driver.getRawAxis(translationAxis) * invertAxes,
+            () -> driver.getRawAxis(strafeAxis) * invertAxes,
+            () -> driver.getRawAxis(rotationAxis) / 2));
 
     shooterSubsystem.setDefaultCommand(shooterStopCommand());
     intakeSubsystem.setDefaultCommand(intakeStopCommand());

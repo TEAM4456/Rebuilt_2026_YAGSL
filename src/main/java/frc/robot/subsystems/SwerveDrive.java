@@ -27,7 +27,7 @@ import com.pathplanner.lib.config.RobotConfig;
 // Example SwerveDrive class
 public class SwerveDrive extends SubsystemBase
 {
-
+    private boolean isRed; // Alliance color affects Field view.
     // Attributes
     SwerveDriveKinematics kinematics;
     AHRS gyro; // Psuedo-class representing a gyroscope.
@@ -37,15 +37,24 @@ public class SwerveDrive extends SubsystemBase
     SwerveDrivePoseEstimator poseEstimator;
     public RobotConfig config;
 
+    // Field Initializer runs before constructor. Use only for basic stuff... like initializing fields.
+    {
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            isRed = alliance.get() == DriverStation.Alliance.Red;
+        } else {
+            isRed = false;
+        }
+    }
+
     // Constructor
     public SwerveDrive() {
-    
         swerveModules = new SwerveModule[4]; // Create swerve modules here.
 
-        swerveModules[0] = new SwerveModule(1, 2, 3, false, 0); // Front left
-        swerveModules[1] = new SwerveModule(4, 5, 6, false, 1); // Front right
-        swerveModules[2] = new SwerveModule(10, 11, 12, false, 2); // Back left
-        swerveModules[3] = new SwerveModule(7, 8, 9, false, 3); // Back right
+        swerveModules[0] = new SwerveModule(1, 2, 3, !isRed, 0); // Front left
+        swerveModules[1] = new SwerveModule(4, 5, 6, !isRed, 1); // Front right
+        swerveModules[2] = new SwerveModule(10, 11, 12, !isRed, 2); // Back left
+        swerveModules[3] = new SwerveModule(7, 8, 9, !isRed, 3); // Back right
         
         // Create SwerveDriveKinematics object
         // 10.5in from center of robot to center of wheel.
@@ -150,11 +159,7 @@ public class SwerveDrive extends SubsystemBase
      * @return true if Red, false otherwise
      */
     public boolean allianceIsRed() {
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-        }
-        return false;
+        return isRed;
     }
 
     public void driveRobotRelative(ChassisSpeeds speeds) {
