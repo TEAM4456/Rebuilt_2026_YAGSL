@@ -150,16 +150,6 @@ public class RobotContainer {
     return intakeSubsystem.spinStop();
   }
 
-  //TODO Remove this setpoint
-  public Command testSetpointCommand() {
-
-    return intakeSubsystem.spinTestSetPosition();
-  }
-
-  public Command autoAlignShootBlueLeftCommand(){
-    return new PathPlannerAuto("Auto Align Trench Shot on Blue Left");
-  }
-
   // Calls the SwerveDrive "updateOdometry" method. Then this method is called in "Robot.java" for actual use. This is therefore a bridge method
   public void updateOdometry() {
     swerve.updateOdometry();
@@ -169,11 +159,16 @@ public class RobotContainer {
   // ========================= AUTONOMOUS COMMANDS =========================
   // =======================================================================
 
-  public Command TestAutoAutoCommand() {
+  public Command forwardAutoCommand(){
+
+    return new PathPlannerAuto("Forward Auto");
+  }
+
+  public Command spinningRobotShootAutoCommand() {
 
     return new SequentialCommandGroup(
 
-      new PathPlannerAuto("Test Auto"),
+      new PathPlannerAuto("Spinning Robot Auto"),
       intakeStartCommand().withTimeout(3),
       intakeStopCommand()
     );
@@ -183,11 +178,9 @@ public class RobotContainer {
   private void configureBindings() {
 
     chooser.setDefaultOption("nothing", null);
-
-    chooser.addOption("Test Auto", TestAutoAutoCommand());
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
+    chooser.addOption("Move Forward", forwardAutoCommand());
+    chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
+    
 
     // Maybe use whileTrue(), idk?
     driver.rightTrigger().toggleOnTrue(shooterShootTrenchCommand());

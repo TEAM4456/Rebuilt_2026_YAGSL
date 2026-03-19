@@ -136,10 +136,11 @@ public class SwerveDrive extends SubsystemBase
         Pose2d alteredPose;
         if (!allianceIsRed()) {
 
-            alteredPose = new Pose2d(currentPose.getX(), currentPose.getY(), currentPose.getRotation());
+            alteredPose = new Pose2d(-currentPose.getX(), -currentPose.getY(), currentPose.getRotation());
         }
         else {
-            alteredPose = currentPose;
+
+            alteredPose = new Pose2d(currentPose.getX(), currentPose.getY(), new Rotation2d(Math.toRadians(currentPose.getRotation().getDegrees() + 180)));
         }
 
         return alteredPose;

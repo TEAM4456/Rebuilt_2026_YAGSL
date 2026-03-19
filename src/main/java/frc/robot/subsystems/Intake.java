@@ -136,19 +136,11 @@ public class Intake extends SubsystemBase {
       });
   }
 
-  public Command spinTestSetPosition() {
-    return run(
-      () -> {
-        
-        spinLoop.setSetpoint(-6906, ControlType.kPosition);
-      });
-  }
-
   // Automatic controls
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+
     SmartDashboard.putNumber("Intake Spinner Speed", spinEncoder.getVelocity());
     SmartDashboard.putNumber("Spin Position Test", spinEncoder.getPosition());
     SmartDashboard.putBoolean("Intake Is Down", isDown);

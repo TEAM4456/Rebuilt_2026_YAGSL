@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto Align Trench Shot on Blue Left"
+            "pathName": "Forward Path"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Auto Tests",
   "choreoAuto": false
 }
