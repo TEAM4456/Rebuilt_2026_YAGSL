@@ -149,6 +149,9 @@ public class RobotContainer {
 
     return intakeSubsystem.spinStop();
   }
+  public Command stopAllMotars() {
+    return new ParallelCommandGroup(intakeStopCommand(), feederStopCommand(), shooterStopCommand());
+  }
 
   // Calls the SwerveDrive "updateOdometry" method. Then this method is called in "Robot.java" for actual use. This is therefore a bridge method
   public void updateOdometry() {
@@ -202,7 +205,7 @@ public class RobotContainer {
     driver.b().toggleOnTrue(intakeStartCommand());
     driver.x().whileTrue(intakeReverseCommand());
     //driver.back().whileTrue(autoAlignShootBlueLeftCommand());
-    
+    driver.povDown().and(driver.povUp().negate()).and(driver.povLeft().negate()).and(driver.povRight()).onTrue(stopAllMotars());
   }
   
   // Look into this later
