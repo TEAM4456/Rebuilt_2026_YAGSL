@@ -44,6 +44,8 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     m_robotContainer.updateOdometry();
     CommandScheduler.getInstance().run();
+
+    m_robotContainer.updateOdometry();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
