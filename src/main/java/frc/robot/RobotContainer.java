@@ -95,6 +95,14 @@ public class RobotContainer {
     return shooterSubsystem.shooterShootAgainstHub();
   }
 
+  public Command shooterRightVoltageCommand() {
+    return shooterSubsystem.shooterRightVoltage();
+  }
+
+public Command shooterLeftVoltageCommand() {
+    return shooterSubsystem.shooterLeftVoltage();
+  }  
+
   /** Starts the feeder motors (feed and indexer) */
   public Command ShootFeedCommand() {
     return shootFeedSubsystem.shootFeedStart();
@@ -190,25 +198,27 @@ public class RobotContainer {
     // cancelling on release.
 
     // Maybe use whileTrue(), idk?
-    driver.rightTrigger().toggleOnTrue(shooterShootTrenchCommand());
+   // driver.rightTrigger().toggleOnTrue(shooterShootTrenchCommand());
 
-    driver.rightBumper().toggleOnTrue(shooterShootUpAgainstHubCommand());
+    //driver.rightBumper().toggleOnTrue(shooterShootUpAgainstHubCommand());
     
+    driver.rightTrigger().onTrue(shooterRightVoltageCommand());
+    driver.leftTrigger().onTrue(shooterLeftVoltageCommand());
+   // driver.leftTrigger().whileTrue(ShootFeedCommand());
+   // driver.leftTrigger().whileFalse(feederStopCommand());
 
-    driver.leftTrigger().whileTrue(ShootFeedCommand());
-    driver.leftTrigger().whileFalse(feederStopCommand());
-
-    driver.leftBumper().whileTrue(ShootFeedReverseCommand());
-    driver.leftBumper().whileFalse(feederStopCommand());
+    //driver.leftBumper().whileTrue(ShootFeedReverseCommand());
+    //driver.leftBumper().whileFalse(feederStopCommand());
 
     //driver.leftBumper().onTrue(intakeToggleCommand());
 
-    driver.a().onTrue(intakeDownCommand());
-    driver.y().onTrue(intakeUpCommand());
+    //driver.a().onTrue(intakeDownCommand());
+    //driver.y().onTrue(intakeUpCommand());
 
-    driver.b().toggleOnTrue(intakeStartCommand());
-    driver.x().whileTrue(intakeReverseCommand());
-       
+    //driver.b().toggleOnTrue(intakeStartCommand());
+    //driver.x().whileTrue(intakeReverseCommand());
+    //driver.back().whileTrue(autoAlignShootBlueLeftCommand());
+    
   }
   
   // Look into this later
