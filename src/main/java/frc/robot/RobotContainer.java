@@ -208,8 +208,7 @@ public class RobotContainer {
 
     driver.b().toggleOnTrue(intakeStartCommand());
     driver.x().whileTrue(intakeReverseCommand());
-    //driver.back().whileTrue(autoAlignShootBlueLeftCommand());
-    
+       
   }
   
   // Look into this later

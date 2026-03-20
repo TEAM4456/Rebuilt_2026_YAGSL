@@ -13,6 +13,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -67,7 +68,7 @@ public class Shooter extends SubsystemBase{
     shootLeftConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     shootLeftConfig.openLoopRampRate(0.5);
     shootLeftConfig.smartCurrentLimit(40);
-    shootLeftMotor.configure(shootLeftConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    shootLeftMotor.configure(shootLeftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
 
     shootRightMotor = new SparkMax(18, MotorType.kBrushless);
@@ -102,7 +103,7 @@ public class Shooter extends SubsystemBase{
     shootRightConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     shootRightConfig.openLoopRampRate(0.5);
     shootRightConfig.smartCurrentLimit(40);
-    shootRightMotor.configure(shootRightConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    shootRightMotor.configure(shootRightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   /** Starts both shooters spinning in shoot direction @return this command */
