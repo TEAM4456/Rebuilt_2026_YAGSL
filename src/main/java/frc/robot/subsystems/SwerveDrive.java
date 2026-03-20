@@ -51,10 +51,10 @@ public class SwerveDrive extends SubsystemBase
     public SwerveDrive() {
         swerveModules = new SwerveModule[4]; // Create swerve modules here.
 
-        swerveModules[0] = new SwerveModule(1, 2, 3, !isRed, 0); // Front left
-        swerveModules[1] = new SwerveModule(4, 5, 6, !isRed, 1); // Front right
-        swerveModules[2] = new SwerveModule(10, 11, 12, !isRed, 2); // Back left
-        swerveModules[3] = new SwerveModule(7, 8, 9, !isRed, 3); // Back right
+        swerveModules[0] = new SwerveModule(1, 2, 3, true, 0); // Front left
+        swerveModules[1] = new SwerveModule(4, 5, 6, true, 1); // Front right
+        swerveModules[2] = new SwerveModule(10, 11, 12, true, 2); // Back left
+        swerveModules[3] = new SwerveModule(7, 8, 9, true, 3); // Back right
         
         // Create SwerveDriveKinematics object
         // 10.5in from center of robot to center of wheel.
@@ -133,17 +133,18 @@ public class SwerveDrive extends SubsystemBase
     public Pose2d getPose() {
         Pose2d currentPose = poseEstimator.getEstimatedPosition();
 
-        Pose2d alteredPose;
-        if (!allianceIsRed()) {
+        return currentPose;
+        // Pose2d alteredPose;
+        // if (!allianceIsRed()) {
 
-            alteredPose = new Pose2d(-currentPose.getX(), -currentPose.getY(), currentPose.getRotation());
-        }
-        else {
+        //     alteredPose = new Pose2d(-currentPose.getX(), -currentPose.getY(), currentPose.getRotation());
+        // }
+        // else {
 
-            alteredPose = new Pose2d(currentPose.getX(), currentPose.getY(), new Rotation2d(Math.toRadians(currentPose.getRotation().getDegrees() + 180)));
-        }
+        //     alteredPose = new Pose2d(currentPose.getX(), currentPose.getY(), new Rotation2d(Math.toRadians(currentPose.getRotation().getDegrees() + 180)));
+        // }
 
-        return alteredPose;
+        // return alteredPose;
     }
 
     public void resetPose(Pose2d pose) {

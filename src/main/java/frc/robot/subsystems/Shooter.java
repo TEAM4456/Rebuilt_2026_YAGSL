@@ -43,7 +43,7 @@ public class Shooter extends SubsystemBase{
     shootLeftConfig = new SparkMaxConfig();
     shootLeftConfig.idleMode(IdleMode.kCoast);
     shootLeftConfig.closedLoop
-    .p(0.003, ClosedLoopSlot.kSlot1)
+    .p(0.0015, ClosedLoopSlot.kSlot1)
     .i(0, ClosedLoopSlot.kSlot1)
     .d(0, ClosedLoopSlot.kSlot1)
     .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
@@ -78,7 +78,7 @@ public class Shooter extends SubsystemBase{
     shootRightConfig.idleMode(IdleMode.kCoast);
 
     shootRightConfig.closedLoop
-      .p(0.003, ClosedLoopSlot.kSlot1)
+      .p(0.0015, ClosedLoopSlot.kSlot1)
       .i(0, ClosedLoopSlot.kSlot1)
       .d(0, ClosedLoopSlot.kSlot1)
       .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
@@ -111,8 +111,8 @@ public class Shooter extends SubsystemBase{
       () -> {
 
         // Set these to the same speed
-        shootLeftLoop.setSetpoint(4500, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
-        shootRightLoop.setSetpoint(-4700, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        shootLeftLoop.setSetpoint(4400, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        shootRightLoop.setSetpoint(-4600, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
       });
   }
 
@@ -121,8 +121,8 @@ public class Shooter extends SubsystemBase{
       () -> {
 
         // Set these to the same speed
-        shootLeftLoop.setSetpoint(3000, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
-        shootRightLoop.setSetpoint(-3000, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
+        shootLeftLoop.setSetpoint(2700, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
+        shootRightLoop.setSetpoint(-2700, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
       });
   }
 

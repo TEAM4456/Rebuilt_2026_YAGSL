@@ -86,8 +86,8 @@ public class Intake extends SubsystemBase {
     return run(
       () -> {
         isDown = false;
-        intakePivotRightLoop.setSetpoint(0, ControlType.kPosition);
-        intakePivotLeftLoop.setSetpoint(0, ControlType.kPosition);
+        intakePivotRightLoop.setSetpoint(1, ControlType.kPosition);
+        intakePivotLeftLoop.setSetpoint(-.79, ControlType.kPosition);
 
         
       });
@@ -98,10 +98,43 @@ public class Intake extends SubsystemBase {
     return run(
       () -> {
 
-        intakePivotRightLoop.setSetpoint(8.071450233, ControlType.kPosition);
-        intakePivotLeftLoop.setSetpoint(-7.85716247, ControlType.kPosition);
+        intakePivotRightLoop.setSetpoint(9.857186317443848, ControlType.kPosition);
+        intakePivotLeftLoop.setSetpoint(-9.785757064819336, ControlType.kPosition);
 
         isDown = true;
+      });
+  }
+
+  /** Turns the intake mechanism down at a set rate.
+   * 
+   * Drivers MUST take care not to damage the pivot by overturning.
+   */
+  public Command intakePivotAngleDown() {
+    return run(
+      () -> {
+        intakePivotRightMotor.set(0.2);
+        intakePivotLeftMotor.set(-0.2);
+      });
+  }
+
+  
+  /** Turns the intake mechanism up at a set rate.
+   * 
+   * Drivers MUST take care not to damage the pivot by overturning.
+   */
+  public Command intakePivotAngleUp() {
+    return run(
+      () -> {
+        intakePivotRightMotor.set(-0.2);
+        intakePivotLeftMotor.set(0.2);
+      });
+  }
+
+  public Command intakePivotAngleStop() {
+    return run(
+      () -> {
+        intakePivotRightMotor.set(0);
+        intakePivotLeftMotor.set(0);
       });
   }
   

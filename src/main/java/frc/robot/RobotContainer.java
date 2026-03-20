@@ -64,14 +64,14 @@ public class RobotContainer {
   public RobotContainer() {
     // If we are red alliance, then the default Field view is good. Otherwise, we need
     //  to invert the translation and strafe axes, as well as the drive motors in SwerveDrive
-    boolean isRed = swerve.allianceIsRed();
-    int invertAxes = isRed ? 1 : -1;
+    // boolean isRed = swerve.allianceIsRed();
+    // int invertAxes = isRed ? 1 : -1;
     swerve.setDefaultCommand(
         new TeleopSwerve(
             swerve,
-            () -> driver.getRawAxis(translationAxis) * invertAxes,
-            () -> driver.getRawAxis(strafeAxis) * invertAxes,
-            () -> driver.getRawAxis(rotationAxis) / 2));
+            () -> -driver.getRawAxis(translationAxis),
+            () -> -driver.getRawAxis(strafeAxis),
+            () -> -driver.getRawAxis(rotationAxis) / 2));
 
     shooterSubsystem.setDefaultCommand(shooterStopCommand());
     intakeSubsystem.setDefaultCommand(intakeStopCommand());
@@ -132,6 +132,18 @@ public class RobotContainer {
     return intakeSubsystem.intakePivotTurnDown();
   }
 
+  public Command intakeAngleUpCommand() {
+    return intakeSubsystem.intakePivotAngleUp();
+  }
+
+  public Command intakeAngleDownCommand() {
+    return intakeSubsystem.intakePivotAngleDown();
+  }
+
+  public Command intakeAngleStopCommand() {
+    return intakeSubsystem.intakePivotAngleStop();
+  }
+
   // /** Start intake feed motor */
   public Command intakeStartCommand() {
 
@@ -149,7 +161,7 @@ public class RobotContainer {
 
     return intakeSubsystem.spinStop();
   }
-  public Command stopAllMotars() {
+  public Command stopAllMotors() {
     return new ParallelCommandGroup(intakeStopCommand(), feederStopCommand(), shooterStopCommand());
   }
 
@@ -205,7 +217,16 @@ public class RobotContainer {
     driver.b().toggleOnTrue(intakeStartCommand());
     driver.x().whileTrue(intakeReverseCommand());
     //driver.back().whileTrue(autoAlignShootBlueLeftCommand());
-    driver.povDown().and(driver.povUp().negate()).and(driver.povLeft().negate()).and(driver.povRight()).onTrue(stopAllMotars());
+    driver.povDown().and(driver.povUp().negate()).and(driver.povLeft().negate()).and(driver.povRight().negate()).onTrue(stopAllMotors());
+
+
+    //Second controller 
+    second.rightTrigger().whileTrue(intakeAngleUpCommand());
+    second.rightTrigger().whileFalse(intakeAngleStopCommand());
+
+    second.leftTrigger().whileTrue(intakeAngleDownCommand());
+    second.rightTrigger().whileFalse(intakeAngleStopCommand());
+
   }
   
   // Look into this later
