@@ -199,7 +199,7 @@ public class SwerveDrive extends SubsystemBase
     // This is passed into RobotContainer, then into Robot to be called periodically during Autonomous operations
     public void updateOdometry() {
         poseEstimator.update(
-        gyro.getRotation2d(),
+        getRotation2d(),
         getModulePositions());
 
         // boolean useMegaTag2 = true; //set to false to use MegaTag1
