@@ -191,6 +191,7 @@ public class RobotContainer {
     return new SequentialCommandGroup(
 
       new PathPlannerAuto("Blue 2 Shoot Preload Auto"),
+      intakeDownCommand(),
       shooterShootUpAgainstHubCommand()
     );
   }
