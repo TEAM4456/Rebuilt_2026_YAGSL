@@ -5,32 +5,24 @@
 
 package frc.robot;
 
+// Our own imports
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShootFeed;
+import frc.robot.commands.TeleopSwerve;
+
+// External imports
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-/* Most commands will be imported later when we deem them necessary...
-  import frc.robot.commands.Autos;
-  import frc.robot.commands.ExampleCommand;
-*/
-// ...This command however has proven itself and has been deemed worthy
-import frc.robot.commands.TeleopSwerve;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.RobotConfig;
-
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -40,9 +32,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public class RobotContainer {
 
-  private final CommandXboxController driver = new CommandXboxController(0);
-  private final CommandXboxController second = new CommandXboxController(1);
-  private final CommandXboxController backup = new CommandXboxController(2);
+  private final CommandXboxController driver = new CommandXboxController(0); // Represents main driver's xbox controller
+  private final CommandXboxController second = new CommandXboxController(1); // Represents secondary xbox controller
+  private final CommandXboxController backup = new CommandXboxController(2); // Represents backup xbox controller
 
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value ;
@@ -115,7 +107,7 @@ public class RobotContainer {
     return shootFeedSubsystem.shootFeedStop();
   }
 
-  // /** If intake is down, raise it. If intake is up, lower it */
+  /** If intake is down, raise it. If intake is up, lower it */
   public Command intakeToggleCommand() {
 
     if (intakeSubsystem.getIsDown())
@@ -165,22 +157,15 @@ public class RobotContainer {
     return new ParallelCommandGroup(intakeStopCommand(), feederStopCommand(), shooterStopCommand());
   }
 
-  // Calls the SwerveDrive "updateOdometry" method. Then this method is called in "Robot.java" for actual use. This is therefore a bridge method
-  public void updateOdometry() {
-    swerve.updateOdometry();
-  }
-
   // =======================================================================
   // ========================= AUTONOMOUS COMMANDS =========================
   // =======================================================================
 
   public Command forwardAutoCommand(){
-
     return new PathPlannerAuto("Forward Auto");
   }
 
   public Command spinningRobotShootAutoCommand() {
-
     return new SequentialCommandGroup(
 
       new PathPlannerAuto("Spinning Robot Auto"),
@@ -188,11 +173,43 @@ public class RobotContainer {
       intakeStopCommand()
     );
   }
+
+  public Command blue1MidPickupAutoCommand() {
+    return new SequentialCommandGroup(
+
+      intakeDownCommand(),
+      intakeStartCommand(),
+      new PathPlannerAuto("Blue 1 Mid Pickup Auto"),
+      intakeStopCommand(),
+      shooterShootTrenchCommand().withTimeout(5)
+    );
+  }
+
+  public Command blue2ShootPreloadPath() {
+    return new SequentialCommandGroup(
+
+      new PathPlannerAuto("Blue 2 Shoot Preload Auto"),
+      shooterShootUpAgainstHubCommand()
+    );
+  }
+
+  public Command blue3MidPickupAutoCommand() {
+    return new SequentialCommandGroup(
+
+      intakeDownCommand(),
+      intakeStartCommand(),
+      new PathPlannerAuto("Blue 3 Mid Pickup Auto"),
+      intakeStopCommand(),
+      shooterShootTrenchCommand().withTimeout(5)
+    );
+  }
   
   
   private void configureBindings() {
 
     chooser.setDefaultOption("nothing", null);
+    chooser.addOption("Blue 1 Mid Pickup Auto", blue1MidPickupAutoCommand());
+    chooser.addOption("Blue 3 Mid Pickup Auto", blue3MidPickupAutoCommand());
     chooser.addOption("Move Forward", forwardAutoCommand());
     chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
     
@@ -227,6 +244,11 @@ public class RobotContainer {
     second.leftTrigger().whileTrue(intakeAngleDownCommand());
     second.rightTrigger().whileFalse(intakeAngleStopCommand());
 
+  }
+
+  // Calls the SwerveDrive "updateOdometry" method. Then this method is called in "Robot.java" for actual use. This is therefore a bridge method
+  public void updateOdometry() {
+    swerve.updateOdometry();
   }
   
   // Look into this later
