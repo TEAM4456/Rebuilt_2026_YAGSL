@@ -178,8 +178,10 @@ public class RobotContainer {
     return new SequentialCommandGroup(
 
       intakeDownCommand(),
-      intakeStartCommand(),
-      new PathPlannerAuto("Blue 1 Mid Pickup Auto"),
+      new ParallelCommandGroup(
+        intakeStartCommand(),
+        new PathPlannerAuto("Blue 1 Mid Pickup Auto")
+      ),
       intakeStopCommand(),
       shooterShootTrenchCommand().withTimeout(5)
     );
@@ -197,8 +199,10 @@ public class RobotContainer {
     return new SequentialCommandGroup(
 
       intakeDownCommand(),
-      intakeStartCommand(),
-      new PathPlannerAuto("Blue 3 Mid Pickup Auto"),
+      new ParallelCommandGroup(
+        intakeStartCommand(),
+        new PathPlannerAuto("Blue 3 Mid Pickup Auto")
+      ),
       intakeStopCommand(),
       shooterShootTrenchCommand().withTimeout(5)
     );
