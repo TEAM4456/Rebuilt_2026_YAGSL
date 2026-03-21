@@ -109,6 +109,21 @@ public class RobotContainer {
     return shootFeedSubsystem.shootFeedStop();
   }
 
+  /** Reverses both the shoot feed mechanism and the actual shooter moters */
+  public Command shooterAndShootFeedReverseCommand() {
+    return new ParallelCommandGroup(
+      shooterSubsystem.shooterReverse(),
+      shootFeedSubsystem.shootFeedReverse()
+    );
+  }
+
+  public Command shooterAndShootFeedStopCommand() {
+    return new ParallelCommandGroup(
+      shooterSubsystem.shooterStop(),
+      shootFeedSubsystem.shootFeedStop()
+    );
+  }
+
   /** If intake is down, raise it. If intake is up, lower it */
   public Command intakeToggleCommand() {
 
@@ -298,6 +313,12 @@ public class RobotContainer {
 
     second.leftTrigger().whileTrue(intakeAngleDownCommand());
     second.rightTrigger().whileFalse(intakeAngleStopCommand());
+
+    second.b().whileTrue(intakeReverseCommand());
+    second.b().onFalse(intakeStopCommand());
+
+    second.x().whileTrue(shooterAndShootFeedReverseCommand());
+    second.x().onFalse(shooterAndShootFeedStopCommand());
 
   }
 

@@ -137,6 +137,16 @@ public class Shooter extends SubsystemBase{
       });
   }
 
+  public Command shooterReverse() {
+    return run(
+      () -> {
+
+        // Sets these motors to the reverse
+        shootLeftMotor.set(-0.3);
+        shootRightMotor.set(0.3);
+    });
+  }
+
   @Override
   public void periodic() {
     
