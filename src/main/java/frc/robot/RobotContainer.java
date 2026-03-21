@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.RobotConfig;
@@ -88,12 +90,12 @@ public class RobotContainer {
   }
 
   /** Starts the feeder motors (feed and indexer) */
-  public Command ShootFeedCommand() {
+  public Command shootFeedCommand() {
     return shootFeedSubsystem.shootFeedStart();
   }
 
    /** Reverses the feeder motors (feed and indexer) */
-  public Command ShootFeedReverseCommand() {
+  public Command shootFeedReverseCommand() {
     return shootFeedSubsystem.shootFeedReverse();
   }
 
@@ -180,19 +182,31 @@ public class RobotContainer {
       intakeDownCommand(),
       new ParallelCommandGroup(
         intakeStartCommand(),
-        new PathPlannerAuto("Blue 1 Mid Pickup Auto")
+        new PathPlannerAuto("Blue 1 Mid Pickup Auto").withTimeout(8.0)
       ),
       intakeStopCommand(),
-      shooterShootTrenchCommand().withTimeout(5)
+      new ParallelCommandGroup(
+        shooterShootTrenchCommand().withTimeout(5),
+        new SequentialCommandGroup(
+          new WaitCommand(2),
+          shootFeedCommand().withTimeout(5)
+        )
+      )
     );
   }
 
-  public Command blue2ShootPreloadPath() {
+  public Command blue2ShootPreloadAutoCommand() {
     return new SequentialCommandGroup(
 
       new PathPlannerAuto("Blue 2 Shoot Preload Auto"),
       intakeDownCommand(),
-      shooterShootUpAgainstHubCommand()
+      new ParallelCommandGroup(
+        shooterShootUpAgainstHubCommand().withTimeout(5),
+        new SequentialCommandGroup(
+          new WaitCommand(2),
+          shootFeedCommand().withTimeout(5)
+        )
+      )
     );
   }
 
@@ -202,18 +216,37 @@ public class RobotContainer {
       intakeDownCommand(),
       new ParallelCommandGroup(
         intakeStartCommand(),
-        new PathPlannerAuto("Blue 3 Mid Pickup Auto")
+        new PathPlannerAuto("Blue 3 Mid Pickup Auto").withTimeout(8.0)
       ),
       intakeStopCommand(),
-      shooterShootTrenchCommand().withTimeout(5)
+      new ParallelCommandGroup(
+        shooterShootTrenchCommand().withTimeout(5),
+        new SequentialCommandGroup(
+          new WaitCommand(2),
+          shootFeedCommand().withTimeout(5)
+        )
+      )
     );
   }
   
+  public Command blueXShootInPlaceAutoCommand() {
+    return new SequentialCommandGroup(
+      intakeDownCommand(),
+      new ParallelCommandGroup(
+        shooterShootTrenchCommand().withTimeout(5),
+        new SequentialCommandGroup(
+          new WaitCommand(2),
+          shootFeedCommand().withTimeout(5)
+        )
+      )
+    );
+  }
   
   private void configureBindings() {
 
     chooser.setDefaultOption("nothing", null);
     chooser.addOption("Blue 1 Mid Pickup Auto", blue1MidPickupAutoCommand());
+    chooser.addOption("Blue 2 Shoot Preload Auto", blue2ShootPreloadAutoCommand());
     chooser.addOption("Blue 3 Mid Pickup Auto", blue3MidPickupAutoCommand());
     chooser.addOption("Move Forward", forwardAutoCommand());
     chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
@@ -225,10 +258,10 @@ public class RobotContainer {
     driver.rightBumper().toggleOnTrue(shooterShootUpAgainstHubCommand());
     
 
-    driver.leftTrigger().whileTrue(ShootFeedCommand());
+    driver.leftTrigger().whileTrue(shootFeedCommand());
     driver.leftTrigger().whileFalse(feederStopCommand());
 
-    driver.leftBumper().whileTrue(ShootFeedReverseCommand());
+    driver.leftBumper().whileTrue(shootFeedReverseCommand());
     driver.leftBumper().whileFalse(feederStopCommand());
 
     //driver.leftBumper().onTrue(intakeToggleCommand());

@@ -67,6 +67,14 @@ public final class Constants {
     // END SWERVE MODULE MOTOR CREATION VALUES
 
     public static final boolean isOpenLoop = true;
+
+    public static final double intakePivotLeftUpSetpoint = -0.79;
+    public static final double intakePivotLeftDownSetpoint = -9.785757064819336;
+
+    public static final double intakePivotRightUpSetpoint = 1;
+    public static final double intakePivotRightDownSetpoint = 9.857186317443848;
+
+
     
   //}
 

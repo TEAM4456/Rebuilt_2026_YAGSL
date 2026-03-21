@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -86,11 +87,15 @@ public class Intake extends SubsystemBase {
     return run(
       () -> {
         isDown = false;
-        intakePivotRightLoop.setSetpoint(1, ControlType.kPosition);
-        intakePivotLeftLoop.setSetpoint(-.79, ControlType.kPosition);
+        intakePivotRightLoop.setSetpoint(Constants.intakePivotRightUpSetpoint, ControlType.kPosition);
+        intakePivotLeftLoop.setSetpoint(Constants.intakePivotLeftUpSetpoint, ControlType.kPosition);
 
         
-      });
+      }).until(
+        () -> {
+          return Math.abs(intakePivotLeftEncoder.getPosition() - Constants.intakePivotLeftUpSetpoint) < 0.5;
+        }
+      );
   }
 
   /** Brings the intake mechanism down onto the field @return this command */
@@ -98,11 +103,15 @@ public class Intake extends SubsystemBase {
     return run(
       () -> {
 
-        intakePivotRightLoop.setSetpoint(9.857186317443848, ControlType.kPosition);
-        intakePivotLeftLoop.setSetpoint(-9.785757064819336, ControlType.kPosition);
+        intakePivotRightLoop.setSetpoint(Constants.intakePivotRightDownSetpoint, ControlType.kPosition);
+        intakePivotLeftLoop.setSetpoint(Constants.intakePivotLeftDownSetpoint, ControlType.kPosition);
 
         isDown = true;
-      });
+      }).until(
+        () -> {
+          return Math.abs(intakePivotLeftEncoder.getPosition() - Constants.intakePivotLeftDownSetpoint) < 0.5;
+        }
+      );
   }
 
   /** Turns the intake mechanism down at a set rate.
