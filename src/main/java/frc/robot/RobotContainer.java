@@ -264,7 +264,7 @@ public class RobotContainer {
     chooser.addOption("Blue 1 Mid Pickup Auto", blue1MidPickupAutoCommand());
     chooser.addOption("Blue 2 Shoot Preload Auto", blue2ShootPreloadAutoCommand());
     chooser.addOption("Blue 3 Mid Pickup Auto", blue3MidPickupAutoCommand());
-    chooser.addOption("Blue Shoot in Place Auto", getAutonomousCommand());
+    chooser.addOption("Blue Shoot in Place Auto", blueXShootInPlaceAutoCommand());
     chooser.addOption("Move Forward", forwardAutoCommand());
     chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
     
