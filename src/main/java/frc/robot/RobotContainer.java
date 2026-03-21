@@ -245,7 +245,7 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       intakeDownCommand(),
       new ParallelCommandGroup(
-        shooterShootUpAgainstHubCommand().withTimeout(7),
+        shooterShootUpAgainstHubCommand().withTimeout(20),
         new SequentialCommandGroup(
           new WaitCommand(2),
           shootFeedCommand().withTimeout(5)
