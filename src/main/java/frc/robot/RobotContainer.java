@@ -186,10 +186,14 @@ public class RobotContainer {
       ),
       intakeStopCommand(),
       new ParallelCommandGroup(
-        shooterShootTrenchCommand().withTimeout(5),
+        shooterShootTrenchCommand().withTimeout(7),
         new SequentialCommandGroup(
           new WaitCommand(2),
           shootFeedCommand().withTimeout(5)
+        ),
+        new SequentialCommandGroup(
+          new WaitCommand(4),
+          intakeUpCommand()
         )
       )
     );
@@ -201,10 +205,14 @@ public class RobotContainer {
       new PathPlannerAuto("Blue 2 Shoot Preload Auto"),
       intakeDownCommand(),
       new ParallelCommandGroup(
-        shooterShootUpAgainstHubCommand().withTimeout(5),
+        shooterShootUpAgainstHubCommand().withTimeout(7),
         new SequentialCommandGroup(
           new WaitCommand(2),
           shootFeedCommand().withTimeout(5)
+        ),
+        new SequentialCommandGroup(
+          new WaitCommand(4),
+          intakeUpCommand()
         )
       )
     );
@@ -220,10 +228,14 @@ public class RobotContainer {
       ),
       intakeStopCommand(),
       new ParallelCommandGroup(
-        shooterShootTrenchCommand().withTimeout(5),
+        shooterShootTrenchCommand().withTimeout(7),
         new SequentialCommandGroup(
           new WaitCommand(2),
           shootFeedCommand().withTimeout(5)
+        ),
+        new SequentialCommandGroup(
+          new WaitCommand(4),
+          intakeUpCommand()
         )
       )
     );
@@ -233,10 +245,14 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       intakeDownCommand(),
       new ParallelCommandGroup(
-        shooterShootTrenchCommand().withTimeout(5),
+        shooterShootUpAgainstHubCommand().withTimeout(7),
         new SequentialCommandGroup(
           new WaitCommand(2),
           shootFeedCommand().withTimeout(5)
+        ),
+        new SequentialCommandGroup(
+          new WaitCommand(4),
+          intakeUpCommand()
         )
       )
     );
@@ -248,6 +264,7 @@ public class RobotContainer {
     chooser.addOption("Blue 1 Mid Pickup Auto", blue1MidPickupAutoCommand());
     chooser.addOption("Blue 2 Shoot Preload Auto", blue2ShootPreloadAutoCommand());
     chooser.addOption("Blue 3 Mid Pickup Auto", blue3MidPickupAutoCommand());
+    chooser.addOption("Blue Shoot in Place Auto", getAutonomousCommand());
     chooser.addOption("Move Forward", forwardAutoCommand());
     chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
     
