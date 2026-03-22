@@ -275,6 +275,27 @@ public class RobotContainer {
       )
     );
   }
+
+  public Command blueXShootInPlaceAndEXTENDintoMid() {
+
+    return new SequentialCommandGroup(
+
+      intakeDownCommand().withTimeout(2),
+
+      new ParallelCommandGroup(
+
+        shooterShootUpAgainstHubCommand().withTimeout(10),
+
+        new SequentialCommandGroup(
+          new WaitCommand(2),
+          shootFeedCommand().withTimeout(8)
+        )
+      ),
+
+      new PathPlannerAuto("From Preload Shoot Go Mid Right Path")
+
+    );
+  }
   
   private void configureBindings() {
 
@@ -283,6 +304,7 @@ public class RobotContainer {
     chooser.addOption("Blue 2 Shoot Preload Auto", blue2ShootPreloadAutoCommand());
     chooser.addOption("Blue 3 Mid Pickup Auto", blue3MidPickupAutoCommand());
     chooser.addOption("Blue Shoot in Place Auto", blueXShootInPlaceAutoCommand());
+    chooser.addOption("Shoot Preload, Then Go Mid", blueXShootInPlaceAndEXTENDintoMid());
     chooser.addOption("Move Forward", forwardAutoCommand());
     chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
     
