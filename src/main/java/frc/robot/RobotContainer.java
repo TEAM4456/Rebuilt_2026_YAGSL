@@ -257,13 +257,16 @@ public class RobotContainer {
   }
   
   public Command blueXShootInPlaceAutoCommand() {
+
     return new SequentialCommandGroup(
-      intakeDownCommand(),
+
+      intakeDownCommand().withTimeout(2),
+
       new ParallelCommandGroup(
         shooterShootUpAgainstHubCommand().withTimeout(20),
         new SequentialCommandGroup(
           new WaitCommand(2),
-          shootFeedCommand().withTimeout(5)
+          shootFeedCommand().withTimeout(7)
         ),
         new SequentialCommandGroup(
           new WaitCommand(4),

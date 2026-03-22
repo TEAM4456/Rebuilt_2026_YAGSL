@@ -31,7 +31,7 @@ public final class Constants {
     public static final double driveVoltageCompensation = 12.0;
     public static final double drivePotentialConversionFactor = Units.inchesToMeters(4 * Math.PI)/5.36; // Taken from the old constants file, most likely should change
     public static final double driveVelocityConversionFactor = Units.inchesToMeters(4 * Math.PI)/5.36/60; // This one too
-    public static final double maxSpeed = 3.5; // Meters per second, taken from the old constants file as well
+    public static final double maxSpeed = 4.5; // Meters per second, taken from the old constants file as well
     public static final boolean turnInverted = false;
     public static final int turnSmartCurrentLimit = 20;
     public static final double turnVoltageCompensation = 12.0;
