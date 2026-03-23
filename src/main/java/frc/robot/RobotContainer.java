@@ -75,6 +75,7 @@ public class RobotContainer {
     
     // Configure the trigger bindings
     configureBindings();
+    swerve.resetPoseTest();
     
     SmartDashboard.putData("auto", chooser);
   }
@@ -299,12 +300,14 @@ public class RobotContainer {
     second.leftTrigger().whileTrue(intakeAngleDownCommand());
     second.rightTrigger().whileFalse(intakeAngleStopCommand());
 
+    swerve.resetPose(null);
   }
 
   // Calls the SwerveDrive "updateOdometry" method. Then this method is called in "Robot.java" for actual use. This is therefore a bridge method
   public void updateOdometry() {
     swerve.updateOdometry();
   }
+
   
   // Look into this later
   /** Takes the selected Auto path in Smart Dashbooard and runs it when "autonomousInit" in "Robot.java" is first started 
