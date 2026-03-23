@@ -292,7 +292,7 @@ public class RobotContainer {
         )
       ),
 
-      new SequentialCommandGroup(
+      new ParallelCommandGroup(
 
         intakeStartCommand(),
         new PathPlannerAuto("From Preload Shoot Go Mid Right Auto")

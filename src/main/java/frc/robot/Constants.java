@@ -68,10 +68,10 @@ public final class Constants {
 
     public static final boolean isOpenLoop = true;
 
-    public static final double intakePivotLeftUpSetpoint = -1;
+    public static final double intakePivotLeftUpSetpoint = -1.5;
     public static final double intakePivotLeftDownSetpoint = -9.785757064819336;
 
-    public static final double intakePivotRightUpSetpoint = 1.2;
+    public static final double intakePivotRightUpSetpoint = 1.6;
     public static final double intakePivotRightDownSetpoint = 9.857186317443848;
 
 
