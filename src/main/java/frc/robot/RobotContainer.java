@@ -110,6 +110,21 @@ public class RobotContainer {
     return shootFeedSubsystem.shootFeedStop();
   }
 
+  /** Reverses both the shoot feed mechanism and the actual shooter moters */
+  public Command shooterAndShootFeedReverseCommand() {
+    return new ParallelCommandGroup(
+      shooterSubsystem.shooterReverse(),
+      shootFeedSubsystem.shootFeedReverse()
+    );
+  }
+
+  public Command shooterAndShootFeedStopCommand() {
+    return new ParallelCommandGroup(
+      shooterSubsystem.shooterStop(),
+      shootFeedSubsystem.shootFeedStop()
+    );
+  }
+
   /** If intake is down, raise it. If intake is up, lower it */
   public Command intakeToggleCommand() {
 
@@ -243,18 +258,45 @@ public class RobotContainer {
   }
   
   public Command blueXShootInPlaceAutoCommand() {
+
     return new SequentialCommandGroup(
-      intakeDownCommand(),
+
+      intakeDownCommand().withTimeout(2),
+
       new ParallelCommandGroup(
-        shooterShootUpAgainstHubCommand().withTimeout(7),
+        shooterShootUpAgainstHubCommand().withTimeout(20),
         new SequentialCommandGroup(
           new WaitCommand(2),
-          shootFeedCommand().withTimeout(5)
+          shootFeedCommand().withTimeout(7)
         ),
         new SequentialCommandGroup(
           new WaitCommand(4),
           intakeUpCommand()
         )
+      )
+    );
+  }
+
+  public Command blueXShootInPlaceAndEXTENDintoMid() {
+
+    return new SequentialCommandGroup(
+
+      intakeDownCommand().withTimeout(2),
+
+      new ParallelCommandGroup(
+
+        shooterShootUpAgainstHubCommand().withTimeout(10),
+
+        new SequentialCommandGroup(
+          new WaitCommand(2),
+          shootFeedCommand().withTimeout(8)
+        )
+      ),
+
+      new ParallelCommandGroup(
+
+        intakeStartCommand(),
+        new PathPlannerAuto("From Preload Shoot Go Mid Right Auto")
       )
     );
   }
@@ -265,7 +307,8 @@ public class RobotContainer {
     chooser.addOption("Blue 1 Mid Pickup Auto", blue1MidPickupAutoCommand());
     chooser.addOption("Blue 2 Shoot Preload Auto", blue2ShootPreloadAutoCommand());
     chooser.addOption("Blue 3 Mid Pickup Auto", blue3MidPickupAutoCommand());
-    chooser.addOption("Blue Shoot in Place Auto", getAutonomousCommand());
+    chooser.addOption("Blue Shoot in Place Auto", blueXShootInPlaceAutoCommand());
+    chooser.addOption("Shoot Preload, Then Go Mid", blueXShootInPlaceAndEXTENDintoMid());
     chooser.addOption("Move Forward", forwardAutoCommand());
     chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
     
@@ -300,7 +343,12 @@ public class RobotContainer {
     second.leftTrigger().whileTrue(intakeAngleDownCommand());
     second.rightTrigger().whileFalse(intakeAngleStopCommand());
 
-    swerve.resetPose(null);
+    second.b().whileTrue(intakeReverseCommand());
+    second.b().onFalse(intakeStopCommand());
+
+    second.x().whileTrue(shooterAndShootFeedReverseCommand());
+    second.x().onFalse(shooterAndShootFeedStopCommand());
+
   }
 
   // Calls the SwerveDrive "updateOdometry" method. Then this method is called in "Robot.java" for actual use. This is therefore a bridge method
