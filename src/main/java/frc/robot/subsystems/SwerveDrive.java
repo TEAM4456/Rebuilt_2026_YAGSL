@@ -153,11 +153,6 @@ public class SwerveDrive extends SubsystemBase
         poseEstimator.resetPosition(getRotation2d(), getModulePositions(), new Pose2d(getPose().getTranslation(), startingPosition));
     }
 
-        public void resetPoseTest() {
-        Rotation2d startingPosition = allianceIsRed() ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0);
-        poseEstimator.resetPosition(getRotation2d(), getModulePositions(), new Pose2d(getPose().getTranslation(), startingPosition));
-    }
-
     public ChassisSpeeds getRobotRelativeSpeeds() {
         ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(getStates());
         return chassisSpeeds;

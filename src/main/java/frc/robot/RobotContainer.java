@@ -75,7 +75,7 @@ public class RobotContainer {
     
     // Configure the trigger bindings
     configureBindings();
-    swerve.resetPoseTest();
+    swerve.resetPose(null);
     
     SmartDashboard.putData("auto", chooser);
   }
