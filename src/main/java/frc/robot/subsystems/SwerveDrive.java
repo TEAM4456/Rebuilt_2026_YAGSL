@@ -4,6 +4,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -148,7 +149,8 @@ public class SwerveDrive extends SubsystemBase
     }
 
     public void resetPose(Pose2d pose) {
-        poseEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
+        Rotation2d startingPosition = allianceIsRed() ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0);
+        poseEstimator.resetPosition(getRotation2d(), getModulePositions(), new Pose2d(getPose().getTranslation(), startingPosition));
     }
 
     public ChassisSpeeds getRobotRelativeSpeeds() {

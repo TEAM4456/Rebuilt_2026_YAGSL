@@ -75,6 +75,7 @@ public class RobotContainer {
     
     // Configure the trigger bindings
     configureBindings();
+    swerve.resetPose(null);
     
     SmartDashboard.putData("auto", chooser);
   }
@@ -354,6 +355,7 @@ public class RobotContainer {
   public void updateOdometry() {
     swerve.updateOdometry();
   }
+
   
   // Look into this later
   /** Takes the selected Auto path in Smart Dashbooard and runs it when "autonomousInit" in "Robot.java" is first started 
