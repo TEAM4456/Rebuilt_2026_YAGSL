@@ -137,19 +137,14 @@ public class Shooter extends SubsystemBase{
       });
   }
 
- public Command shooterRightVoltage() {
+ public Command shooterVoltage() {
     return run(
       () -> {
         shootRightMotor.setVoltage(1);
+        shootLeftMotor.setVoltage(-1);
       });
   }
 
-public Command shooterLeftVoltage() {
-    return run(
-      () -> {
-        shootRightMotor.setVoltage(1);
-      });
-  }
 
   @Override
   public void periodic() {

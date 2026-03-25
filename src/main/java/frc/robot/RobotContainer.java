@@ -95,13 +95,9 @@ public class RobotContainer {
     return shooterSubsystem.shooterShootAgainstHub();
   }
 
-  public Command shooterRightVoltageCommand() {
-    return shooterSubsystem.shooterRightVoltage();
+  public Command shooterVoltageCommand() {
+    return shooterSubsystem.shooterVoltage();
   }
-
-public Command shooterLeftVoltageCommand() {
-    return shooterSubsystem.shooterLeftVoltage();
-  }  
 
   /** Starts the feeder motors (feed and indexer) */
   public Command ShootFeedCommand() {
@@ -202,8 +198,8 @@ public Command shooterLeftVoltageCommand() {
 
     //driver.rightBumper().toggleOnTrue(shooterShootUpAgainstHubCommand());
     
-    driver.rightTrigger().onTrue(shooterRightVoltageCommand());
-    driver.leftTrigger().onTrue(shooterLeftVoltageCommand());
+    driver.rightTrigger().whileTrue(shooterVoltageCommand());
+    driver.rightTrigger().whileFalse(shooterStopCommand());
    // driver.leftTrigger().whileTrue(ShootFeedCommand());
    // driver.leftTrigger().whileFalse(feederStopCommand());
 
