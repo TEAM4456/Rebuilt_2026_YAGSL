@@ -201,21 +201,20 @@ public class RobotContainer {
       intakeStopCommand()
     );
   }
-  public Command blue1ShootPreAndMidPickUp() {
+  public Command blue1MidPickupAndShootCommand() {
     return new ParallelCommandGroup(
       new SequentialCommandGroup(
-        intakeDownCommand().withTimeout(1),
-        shooterShootTrenchCommand().withTimeout(6)
+        blue1MidPickupAutoCommand()
+
         
       ),
       new SequentialCommandGroup(
-        new WaitCommand(2),
-        shootFeedCommand().withTimeout(5),
-        shooterAndShootFeedStopCommand()
+        new WaitCommand(12),
+        shooterShootUpAgainstHubCommand().withTimeout(6)
       ),
       new SequentialCommandGroup(
-        new WaitCommand(7),
-        blue1MidPickupAutoCommand()
+        new WaitCommand(14),
+        shootFeedCommand().withTimeout(5)
       )
     );
   }
@@ -224,21 +223,42 @@ public class RobotContainer {
 
       intakeDownCommand().withTimeout(1),
       new ParallelCommandGroup(
-        intakeStartCommand(),
+        intakeStartCommand().withTimeout(12),
         new PathPlannerAuto("Blue 1 Mid Pickup Auto")
       ),
-      intakeStopCommand(),
-      new ParallelCommandGroup(
-        shooterShootTrenchCommand().withTimeout(7),
-        new SequentialCommandGroup(
-          new WaitCommand(2),
-          shootFeedCommand().withTimeout(5)
-        ),
-        new SequentialCommandGroup(
-          new WaitCommand(4),
-          intakeUpCommand()
-        )
+      intakeStopCommand().withTimeout(1),
+      new WaitCommand(4),
+      intakeUpCommand()
+    );
+  }
+
+  public Command red1MidPickupAndShootCommand() {
+    return new ParallelCommandGroup(
+      new SequentialCommandGroup(
+        red1MidPickupAutoCommand()
+      ),
+      new SequentialCommandGroup(
+        new WaitCommand(12),
+        shooterShootUpAgainstHubCommand().withTimeout(6)
+      ),
+      new SequentialCommandGroup(
+        new WaitCommand(14),
+        shootFeedCommand().withTimeout(5)
       )
+    );
+  }
+
+  public Command red1MidPickupAutoCommand() {
+    return new SequentialCommandGroup(
+
+      intakeDownCommand().withTimeout(1),
+      new ParallelCommandGroup(
+        intakeStartCommand().withTimeout(12),
+        new PathPlannerAuto("Red 1 Mid Pickup Auto")
+      ),
+      intakeStopCommand().withTimeout(1),
+      new WaitCommand(4),
+      intakeUpCommand()
     );
   }
 
@@ -336,7 +356,8 @@ public class RobotContainer {
     chooser.addOption("Blue 3 Mid Pickup Auto", blue3MidPickupAutoCommand());
     chooser.addOption("Blue Shoot in Place Auto", blueXShootInPlaceAutoCommand());
     chooser.addOption("Shoot Preload, Then Go Mid", blueXShootInPlaceAndEXTENDintoMid());
-    chooser.addOption("Shoot preload from Trench, Then Go Mid", blue1ShootPreAndMidPickUp());
+    chooser.addOption("Blue 1 Collect from Mid, Shoot from Trench", blue1MidPickupAndShootCommand());
+    chooser.addOption("Red 1 Collect from Mid, Shoot from Trench", red1MidPickupAndShootCommand());
     chooser.addOption("Move Forward", forwardAutoCommand());
     chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
 

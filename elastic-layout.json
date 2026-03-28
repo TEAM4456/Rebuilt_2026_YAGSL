@@ -198,7 +198,7 @@
             "title": "Field",
             "x": 0.0,
             "y": 0.0,
-            "width": 896.0,
+            "width": 768.0,
             "height": 512.0,
             "type": "Field",
             "properties": {
@@ -258,6 +258,19 @@
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": false
+            }
+          },
+          {
+            "title": "limelight-sjc",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 384.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight-sjc",
+              "period": 0.06,
+              "rotation_turns": 0
             }
           }
         ]
