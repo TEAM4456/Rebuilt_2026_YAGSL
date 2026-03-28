@@ -201,7 +201,24 @@ public class RobotContainer {
       intakeStopCommand()
     );
   }
-
+  public Command blue1ShootPreAndMidPickUp() {
+    return new ParallelCommandGroup(
+      new SequentialCommandGroup(
+        intakeDownCommand().withTimeout(1),
+        shooterShootTrenchCommand().withTimeout(6)
+        
+      ),
+      new SequentialCommandGroup(
+        new WaitCommand(2),
+        shootFeedCommand().withTimeout(5),
+        shooterAndShootFeedStopCommand()
+      ),
+      new SequentialCommandGroup(
+        new WaitCommand(7),
+        blue1MidPickupAutoCommand()
+      )
+    );
+  }
   public Command blue1MidPickupAutoCommand() {
     return new SequentialCommandGroup(
 
@@ -319,9 +336,9 @@ public class RobotContainer {
     chooser.addOption("Blue 3 Mid Pickup Auto", blue3MidPickupAutoCommand());
     chooser.addOption("Blue Shoot in Place Auto", blueXShootInPlaceAutoCommand());
     chooser.addOption("Shoot Preload, Then Go Mid", blueXShootInPlaceAndEXTENDintoMid());
+    chooser.addOption("Shoot preload from Trench, Then Go Mid", blue1ShootPreAndMidPickUp());
     chooser.addOption("Move Forward", forwardAutoCommand());
     chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
-    
 
     // Maybe use whileTrue(), idk?
     driver.rightTrigger().toggleOnTrue(shooterShootTrenchCommand());
@@ -345,7 +362,7 @@ public class RobotContainer {
     //driver.back().whileTrue(autoAlignShootBlueLeftCommand());
     driver.povDown().and(driver.povUp().negate()).and(driver.povLeft().negate()).and(driver.povRight().negate()).onTrue(stopAllMotors());
     driver.povUp().and(driver.povDown().negate()).and(driver.povLeft().negate()).and(driver.povRight().negate()).toggleOnTrue((shooterShootPassingCommand()));
-    
+
     //Second controller 
     second.rightTrigger().whileTrue(intakeAngleUpCommand());
     second.rightTrigger().whileFalse(intakeAngleStopCommand());
