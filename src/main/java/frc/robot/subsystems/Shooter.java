@@ -111,18 +111,26 @@ public class Shooter extends SubsystemBase{
       () -> {
 
         // Set these to the same speed
-        shootLeftLoop.setSetpoint(4200, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
-        shootRightLoop.setSetpoint(-4200, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        shootLeftLoop.setSetpoint(3800, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        shootRightLoop.setSetpoint(-3800, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
       });
   }
+  public Command shooterShootPassing() {
+    return run(
+      () -> {
 
+        // Set these to the same speed
+        shootLeftLoop.setSetpoint(4100, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
+        shootRightLoop.setSetpoint(-4100, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
+      });
+    }
    public Command shooterShootAgainstHub() {
     return run(
       () -> {
 
         // Set these to the same speed
-        shootLeftLoop.setSetpoint(2700, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
-        shootRightLoop.setSetpoint(-2700, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
+        shootLeftLoop.setSetpoint(2600, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
+        shootRightLoop.setSetpoint(-2600, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
       });
   }
 

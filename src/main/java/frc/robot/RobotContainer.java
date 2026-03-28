@@ -90,6 +90,10 @@ public class RobotContainer {
     return shooterSubsystem.shooterShootAgainstHub();
   }
 
+  public Command shooterShootPassingCommand() {
+    return shooterSubsystem.shooterShootPassing();
+  }
+
   /** Starts the feeder motors (feed and indexer) */
   public Command shootFeedCommand() {
     return shootFeedSubsystem.shootFeedStart();
@@ -180,10 +184,16 @@ public class RobotContainer {
   // =======================================================================
 
   public Command forwardAutoCommand(){
-    return new PathPlannerAuto("Forward Auto");
+
+    return new SequentialCommandGroup(
+
+      intakeDownCommand(),
+      new PathPlannerAuto("Forward Auto")
+    );
   }
 
   public Command spinningRobotShootAutoCommand() {
+
     return new SequentialCommandGroup(
 
       new PathPlannerAuto("Spinning Robot Auto"),
@@ -195,10 +205,10 @@ public class RobotContainer {
   public Command blue1MidPickupAutoCommand() {
     return new SequentialCommandGroup(
 
-      intakeDownCommand(),
+      intakeDownCommand().withTimeout(1),
       new ParallelCommandGroup(
         intakeStartCommand(),
-        new PathPlannerAuto("Blue 1 Mid Pickup Auto").withTimeout(8.0)
+        new PathPlannerAuto("Blue 1 Mid Pickup Auto")
       ),
       intakeStopCommand(),
       new ParallelCommandGroup(
@@ -334,8 +344,8 @@ public class RobotContainer {
     driver.x().whileTrue(intakeReverseCommand());
     //driver.back().whileTrue(autoAlignShootBlueLeftCommand());
     driver.povDown().and(driver.povUp().negate()).and(driver.povLeft().negate()).and(driver.povRight().negate()).onTrue(stopAllMotors());
-
-
+    driver.povUp().and(driver.povDown().negate()).and(driver.povLeft().negate()).and(driver.povRight().negate()).toggleOnTrue((shooterShootPassingCommand()));
+    
     //Second controller 
     second.rightTrigger().whileTrue(intakeAngleUpCommand());
     second.rightTrigger().whileFalse(intakeAngleStopCommand());

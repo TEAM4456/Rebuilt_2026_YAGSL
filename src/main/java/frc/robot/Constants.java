@@ -59,7 +59,7 @@ public final class Constants {
     public static final double iDriveMotor = 0;
     public static final double dDriveMotor = 0;
 
-    public static final double pTurnMotor = 0.0035; // Increased to help deal with wheels not getting to their proper offsets
+    public static final double pTurnMotor = 0.007; // Increased to help deal with wheels not getting to their proper offsets
     public static final double iTurnMotor = 0;
     public static final double dTurnMotor = 0;
 
@@ -68,10 +68,10 @@ public final class Constants {
 
     public static final boolean isOpenLoop = true;
 
-    public static final double intakePivotLeftUpSetpoint = -1.5;
+    public static final double intakePivotLeftUpSetpoint = -2.14;
     public static final double intakePivotLeftDownSetpoint = -9.785757064819336;
 
-    public static final double intakePivotRightUpSetpoint = 1.6;
+    public static final double intakePivotRightUpSetpoint = 2;
     public static final double intakePivotRightDownSetpoint = 9.857186317443848;
 
 
