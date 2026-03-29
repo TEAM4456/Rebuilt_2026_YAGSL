@@ -133,7 +133,15 @@ public class Shooter extends SubsystemBase{
         shootRightLoop.setSetpoint(-2550, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
       });
   }
+  public Command shooterShootForAuto() {
+    return run(
+      () -> {
 
+        // Set these to the same speed
+        shootLeftLoop.setSetpoint(2800, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
+        shootRightLoop.setSetpoint(-2800, ControlType.kVelocity, ClosedLoopSlot.kSlot2);
+      });
+  }
   /** Stops both shooters and index motor basically shutting down the shooter @return this command */
   public Command shooterStop() {
     return run(

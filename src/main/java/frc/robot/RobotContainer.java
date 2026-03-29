@@ -90,6 +90,10 @@ public class RobotContainer {
     return shooterSubsystem.shooterShootAgainstHub();
   }
 
+  public Command shooterShootUpForAutoCommand() {
+    return shooterSubsystem.shooterShootForAuto();
+  }
+
   public Command shooterShootPassingCommand() {
     return shooterSubsystem.shooterShootPassing();
   }
@@ -210,7 +214,7 @@ public class RobotContainer {
       ),
       new SequentialCommandGroup(
         new WaitCommand(12),
-        shooterShootUpAgainstHubCommand().withTimeout(6)
+        shooterShootUpForAutoCommand().withTimeout(6)
       ),
       new SequentialCommandGroup(
         new WaitCommand(14),
