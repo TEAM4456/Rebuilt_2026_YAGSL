@@ -90,35 +90,37 @@ public class RobotContainer {
     return shooterSubsystem.shooterShootAgainstHub();
   }
 
+  /** Starts the shooter for the auto shot */
   public Command shooterShootUpForAutoCommand() {
     return shooterSubsystem.shooterShootForAuto();
   }
 
+  /** ??? */
   public Command shooterShootPassingCommand() {
     return shooterSubsystem.shooterShootPassing();
   }
 
-  /** Starts the feeder motors (feed and indexer) */
+  /** Starts the feeder motors (feeder and indexer) */
   public Command shootFeedCommand() {
     return shootFeedSubsystem.shootFeedStart();
   }
 
-   /** Reverses the feeder motors (feed and indexer) */
+   /** Reverses the feeder motors (feeder and indexer) */
   public Command shootFeedReverseCommand() {
     return shootFeedSubsystem.shootFeedReverse();
   }
 
-  // /** Stops the shooter */
+  /** Stops the shooter */
   public Command shooterStopCommand() {
     return shooterSubsystem.shooterStop();
   }
 
-  /* Stops the feeder */
+  /* Stops the feeder motors (feeder and indexer) */
    public Command feederStopCommand() {
     return shootFeedSubsystem.shootFeedStop();
   }
 
-  /** Reverses both the shoot feed mechanism and the actual shooter moters */
+  /** Reverses both the shooter and feeder moters */
   public Command shooterAndShootFeedReverseCommand() {
     return new ParallelCommandGroup(
       shooterSubsystem.shooterReverse(),
@@ -126,6 +128,7 @@ public class RobotContainer {
     );
   }
 
+  /** Stops the shooter and feeder motors */
   public Command shooterAndShootFeedStopCommand() {
     return new ParallelCommandGroup(
       shooterSubsystem.shooterStop(),
@@ -133,7 +136,8 @@ public class RobotContainer {
     );
   }
 
-  /** If intake is down, raise it. If intake is up, lower it */
+  /** Unused::
+   * If intake is down, raise it. If intake is up, lower it */
   public Command intakeToggleCommand() {
 
     if (intakeSubsystem.getIsDown())
@@ -285,6 +289,24 @@ public class RobotContainer {
     );
   }
 
+  public Command blue3MidPickupAndShootCommand() {
+    return new ParallelCommandGroup(
+      new SequentialCommandGroup(
+        blue3MidPickupAutoCommand()
+
+        
+      ),
+      new SequentialCommandGroup(
+        new WaitCommand(12),
+        shooterShootUpForAutoCommand().withTimeout(6)
+      ),
+      new SequentialCommandGroup(
+        new WaitCommand(14),
+        shootFeedCommand().withTimeout(5)
+      )
+    );
+  }
+
   public Command blue3MidPickupAutoCommand() {
     return new SequentialCommandGroup(
 
@@ -361,6 +383,7 @@ public class RobotContainer {
     chooser.addOption("Blue Shoot in Place Auto", blueXShootInPlaceAutoCommand());
     chooser.addOption("Shoot Preload, Then Go Mid", blueXShootInPlaceAndEXTENDintoMid());
     chooser.addOption("Blue 1 Collect from Mid, Shoot from Trench", blue1MidPickupAndShootCommand());
+    chooser.addOption("Blue 3 Collect from Mid, Shoot from Trench", blue3MidPickupAndShootCommand());
     chooser.addOption("Red 1 Collect from Mid, Shoot from Trench", red1MidPickupAndShootCommand());
     chooser.addOption("Move Forward", forwardAutoCommand());
     chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
