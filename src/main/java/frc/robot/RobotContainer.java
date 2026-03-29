@@ -288,7 +288,7 @@ public class RobotContainer {
       )
     );
   }
-
+  
   public Command blue3MidPickupAndShootCommand() {
     return new ParallelCommandGroup(
       new SequentialCommandGroup(
@@ -305,28 +305,18 @@ public class RobotContainer {
         shootFeedCommand().withTimeout(5)
       )
     );
-  }
-
+  } 
   public Command blue3MidPickupAutoCommand() {
     return new SequentialCommandGroup(
 
-      intakeDownCommand(),
+      intakeDownCommand().withTimeout(1),
       new ParallelCommandGroup(
-        intakeStartCommand(),
-        new PathPlannerAuto("Blue 3 Mid Pickup Auto").withTimeout(8.0)
+        intakeStartCommand().withTimeout(12),
+        new PathPlannerAuto("Blue 3 Mid Pickup Auto")
       ),
-      intakeStopCommand(),
-      new ParallelCommandGroup(
-        shooterShootTrenchCommand().withTimeout(7),
-        new SequentialCommandGroup(
-          new WaitCommand(2),
-          shootFeedCommand().withTimeout(5)
-        ),
-        new SequentialCommandGroup(
-          new WaitCommand(4),
-          intakeUpCommand()
-        )
-      )
+      intakeStopCommand().withTimeout(1),
+      new WaitCommand(4),
+      intakeUpCommand()
     );
   }
   
