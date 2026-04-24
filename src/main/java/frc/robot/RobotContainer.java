@@ -10,6 +10,7 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShootFeed;
+import frc.robot.subsystems.LEDs;
 import frc.robot.commands.TeleopSwerve;
 
 // External imports
@@ -47,6 +48,7 @@ public class RobotContainer {
   private final Intake intakeSubsystem = new Intake();
   private final Shooter shooterSubsystem = new Shooter();
   private final ShootFeed shootFeedSubsystem = new ShootFeed();
+  private final LEDs ledSubsystem = new LEDs();
 
   private final SwerveDrive swerve = new SwerveDrive();
   
@@ -69,6 +71,7 @@ public class RobotContainer {
 
     shooterSubsystem.setDefaultCommand(shooterStopCommand());
     intakeSubsystem.setDefaultCommand(intakeStopCommand());
+    ledSubsystem.setDefaultCommand(setLEDsRedCommand());
 
 
     chooser = AutoBuilder.buildAutoChooser();
@@ -183,6 +186,27 @@ public class RobotContainer {
 
     return intakeSubsystem.spinStop();
   }
+
+// Set LEDs to red (make a default command)
+  public Command setLEDsRedCommand() {
+    return ledSubsystem.setLEDsRed();
+  }
+
+// Set LEDs to white (bind to Y button on second controller)  
+  public Command setLEDsWhiteCommand() {
+    return ledSubsystem.setLEDsWhite();
+  }
+
+// Set LEDs to blue (bind to A button on second controller)  
+  public Command setLEDsBlueCommand() {
+    return ledSubsystem.setLEDsBlue();
+  }
+
+// Set LEDs to green (bind to B button on second controller)  
+  public Command setLEDsGreenCommand() {
+    return ledSubsystem.setLEDsGreen();
+  }
+
   public Command stopAllMotors() {
     return new ParallelCommandGroup(intakeStopCommand(), feederStopCommand(), shooterStopCommand());
   }
@@ -408,11 +432,16 @@ public class RobotContainer {
     second.leftTrigger().whileTrue(intakeAngleDownCommand());
     second.rightTrigger().whileFalse(intakeAngleStopCommand());
 
-    second.b().whileTrue(intakeReverseCommand());
-    second.b().onFalse(intakeStopCommand());
+    second.rightBumper().whileTrue(intakeReverseCommand());
+    second.rightBumper().whileFalse(intakeStopCommand());
 
-    second.x().whileTrue(shooterAndShootFeedReverseCommand());
-    second.x().onFalse(shooterAndShootFeedStopCommand());
+    second.leftBumper().whileTrue(shooterAndShootFeedReverseCommand());
+    second.leftBumper().whileFalse(shooterAndShootFeedStopCommand());
+
+    second.y().whileTrue(setLEDsWhiteCommand());
+    second.a().whileTrue(setLEDsBlueCommand());
+    second.b().whileTrue(setLEDsGreenCommand());
+    second.x().whileTrue(setLEDsRedCommand());
 
   }
 
