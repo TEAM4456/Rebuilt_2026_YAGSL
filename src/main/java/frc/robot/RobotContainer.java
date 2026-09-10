@@ -63,9 +63,9 @@ public class RobotContainer {
     swerve.setDefaultCommand(
         new TeleopSwerve(
             swerve,
-            () -> -driver.getRawAxis(translationAxis),
-            () -> -driver.getRawAxis(strafeAxis),
-            () -> -driver.getRawAxis(rotationAxis) / 2));
+            () -> -driver.getRawAxis(translationAxis) / 4,
+            () -> -driver.getRawAxis(strafeAxis) / 4,
+            () -> -driver.getRawAxis(rotationAxis) / 4));
 
     shooterSubsystem.setDefaultCommand(shooterStopCommand());
     intakeSubsystem.setDefaultCommand(intakeStopCommand());
@@ -378,11 +378,7 @@ public class RobotContainer {
     chooser.addOption("Move Forward", forwardAutoCommand());
     chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
 
-    // Maybe use whileTrue(), idk?
-    driver.rightTrigger().toggleOnTrue(shooterShootTrenchCommand());
-
-    driver.rightBumper().toggleOnTrue(shooterShootUpAgainstHubCommand());
-    
+    driver.rightTrigger().toggleOnTrue(shooterShootUpAgainstHubCommand());
 
     driver.leftTrigger().whileTrue(shootFeedCommand());
     driver.leftTrigger().whileFalse(feederStopCommand());
@@ -392,27 +388,12 @@ public class RobotContainer {
 
     //driver.leftBumper().onTrue(intakeToggleCommand());
 
-    driver.a().onTrue(intakeDownCommand());
     driver.y().onTrue(intakeUpCommand());
+    driver.a().onTrue(intakeDownCommand());
 
     driver.b().toggleOnTrue(intakeStartCommand());
     driver.x().whileTrue(intakeReverseCommand());
-    //driver.back().whileTrue(autoAlignShootBlueLeftCommand());
     driver.povDown().and(driver.povUp().negate()).and(driver.povLeft().negate()).and(driver.povRight().negate()).onTrue(stopAllMotors());
-    driver.povUp().and(driver.povDown().negate()).and(driver.povLeft().negate()).and(driver.povRight().negate()).toggleOnTrue((shooterShootPassingCommand()));
-
-    //Second controller 
-    second.rightTrigger().whileTrue(intakeAngleUpCommand());
-    second.rightTrigger().whileFalse(intakeAngleStopCommand());
-
-    second.leftTrigger().whileTrue(intakeAngleDownCommand());
-    second.rightTrigger().whileFalse(intakeAngleStopCommand());
-
-    second.b().whileTrue(intakeReverseCommand());
-    second.b().onFalse(intakeStopCommand());
-
-    second.x().whileTrue(shooterAndShootFeedReverseCommand());
-    second.x().onFalse(shooterAndShootFeedStopCommand());
 
   }
 
