@@ -379,6 +379,7 @@ public class RobotContainer {
     chooser.addOption("Spin and Shoot", spinningRobotShootAutoCommand());
 
     driver.rightTrigger().toggleOnTrue(shooterShootUpAgainstHubCommand());
+    driver.rightBumper().toggleOnTrue(shooterShootTrenchCommand());
 
     driver.leftTrigger().whileTrue(shootFeedCommand());
     driver.leftTrigger().whileFalse(feederStopCommand());
